@@ -1,4 +1,5 @@
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/widgets/floatingmusicwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,11 +7,15 @@ import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors().mainBackground,
-      drawer: Drawer(),
+      drawer: Drawer(
+        backgroundColor: Colors.black,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,6 +50,8 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
+      floatingActionButton: FloatingMusicWidget(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -53,7 +60,9 @@ class HomeView extends GetView<HomeController> {
       elevation: 0,
       backgroundColor: AppColors().mainBackground,
       leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            scaffoldKey.currentState?.openDrawer();
+          },
           icon: Icon(
             Icons.menu,
             size: 22.sp,
