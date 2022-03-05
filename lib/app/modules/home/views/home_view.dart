@@ -1,4 +1,5 @@
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors().mainBackground,
+      backgroundColor: AppColors.mainBackground,
       drawer: Drawer(
         backgroundColor: Colors.black,
       ),
@@ -58,7 +59,7 @@ class HomeView extends GetView<HomeController> {
   buildAppBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: AppColors().mainBackground,
+      backgroundColor: AppColors.mainBackground,
       leading: IconButton(
           onPressed: () {
             scaffoldKey.currentState?.openDrawer();
@@ -138,9 +139,14 @@ class HomeView extends GetView<HomeController> {
   buildImageTextCard() {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 50.r,
-          backgroundImage: ExactAssetImage('assets/images/artist.png'),
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(Routes.ARTIST);
+          },
+          child: CircleAvatar(
+            radius: 50.r,
+            backgroundImage: ExactAssetImage('assets/images/artist.png'),
+          ),
         ),
         SizedBox(
           height: 10.sp,

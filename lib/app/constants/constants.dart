@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AppColors {
-  var mainBackground = Color.fromRGBO(248, 248, 248, 1);
-  var primaryClr = Color.fromRGBO(13, 133, 243, 1);
-  var shadow = Color.fromRGBO(0, 0, 0, 0.1);
+mixin AppColors {
+  static const mainBackground = Color.fromRGBO(248, 248, 248, 1);
+  static const primaryClr = Color.fromRGBO(13, 133, 243, 1);
+  static const shadow = Color.fromRGBO(0, 0, 0, 0.1);
 }
 
 TextStyle get titleStyle {

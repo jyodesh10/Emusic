@@ -16,7 +16,7 @@ class FloatingMusicWidget extends StatelessWidget {
               height: 80.h,
               // width: 310.w,
               decoration: BoxDecoration(
-                color: AppColors().primaryClr,
+                color: AppColors.primaryClr,
                 borderRadius: BorderRadius.circular(40),
               ),
               child: Center(
@@ -48,9 +48,25 @@ class FloatingMusicWidget extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(top: 30),
-            child: Image.asset(
-              'assets/images/vinyl.png',
-              height: 150,
+            child: Stack(
+              children: [
+                Image.asset(
+                  'assets/images/vinyl.png',
+                  height: 150,
+                ),
+                Positioned(
+                  left: 37.5,
+                  top: 47,
+                  child: CircleAvatar(
+                    radius: 35.r,
+                    backgroundColor: Colors.transparent,
+                    child: Image.asset(
+                      'assets/images/artist.png',
+                      height: 64,
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ],

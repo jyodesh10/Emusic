@@ -13,7 +13,7 @@ class RegisterView extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors().mainBackground,
+        backgroundColor: AppColors.mainBackground,
         body: SingleChildScrollView(
           child: Stack(
             children: [
@@ -57,7 +57,7 @@ class RegisterView extends GetView<RegisterController> {
                                   text: 'Sign in',
                                   style: subtitleStyle.copyWith(
                                       decoration: TextDecoration.underline,
-                                      color: AppColors().primaryClr,
+                                      color: AppColors.primaryClr,
                                       fontSize: 12.sp),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () => Get.toNamed(Routes.LOGIN))
@@ -76,7 +76,7 @@ class RegisterView extends GetView<RegisterController> {
     return Container(
       height: 300.h,
       decoration: BoxDecoration(
-          color: AppColors().primaryClr,
+          color: AppColors.primaryClr,
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(150),
               bottomRight: Radius.circular(150))),
@@ -103,7 +103,7 @@ class RegisterView extends GetView<RegisterController> {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-                color: AppColors().shadow, blurRadius: 10, offset: Offset(0, 2))
+                color: AppColors.shadow, blurRadius: 10, offset: Offset(0, 2))
           ]),
       child: Column(
         children: [

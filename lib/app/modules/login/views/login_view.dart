@@ -16,7 +16,7 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors().mainBackground,
+        backgroundColor: AppColors.mainBackground,
         body: SingleChildScrollView(
           child: Container(
             height: 800.h,
@@ -32,7 +32,7 @@ class LoginView extends GetView<LoginController> {
                           color: Color.fromRGBO(50, 35, 196, 1),
                           boxShadow: [
                             BoxShadow(
-                                color: AppColors().shadow,
+                                color: AppColors.shadow,
                                 blurRadius: 10,
                                 offset: Offset(0, 9))
                           ],
@@ -47,7 +47,7 @@ class LoginView extends GetView<LoginController> {
                           color: Color.fromRGBO(8, 94, 224, 1),
                           boxShadow: [
                             BoxShadow(
-                                color: AppColors().shadow,
+                                color: AppColors.shadow,
                                 blurRadius: 10,
                                 offset: Offset(0, 9))
                           ],
@@ -62,7 +62,7 @@ class LoginView extends GetView<LoginController> {
                           color: Color.fromRGBO(13, 133, 243, 1),
                           boxShadow: [
                             BoxShadow(
-                                color: AppColors().shadow,
+                                color: AppColors.shadow,
                                 blurRadius: 10,
                                 offset: Offset(0, 9))
                           ],
@@ -76,10 +76,10 @@ class LoginView extends GetView<LoginController> {
                       height: 236.sp,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color: AppColors().primaryClr,
+                          color: AppColors.primaryClr,
                           boxShadow: [
                             BoxShadow(
-                                color: AppColors().shadow,
+                                color: AppColors.shadow,
                                 blurRadius: 10,
                                 offset: Offset(0, 9))
                           ],
@@ -163,7 +163,7 @@ class LoginView extends GetView<LoginController> {
                                             style: subtitleStyle.copyWith(
                                                 decoration:
                                                     TextDecoration.underline,
-                                                color: AppColors().primaryClr,
+                                                color: AppColors.primaryClr,
                                                 fontSize: 12.sp),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () =>
