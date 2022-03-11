@@ -8,18 +8,35 @@ mixin AppColors {
   static const shadow = Color.fromRGBO(0, 0, 0, 0.1);
 }
 
+mixin AppImages {
+  static const logo = "assets/images/logo.png";
+  static const vinyl = "assets/images/vinyl.png";
+  static const vinyl2 = "assets/images/vinyl2.png";
+  static const merch = "assets/images/merch.png";
+  static const artist = "assets/images/artist.png";
+}
+
+mixin AppIcons {
+  static const esewa = "assets/icons/esewa.png";
+  static const khalti = "assets/icons/khalti.png";
+  static const pause = "assets/icons/Pause.png";
+  static const skipback = "assets/icons/SkipBack.png";
+  static const skipfwd = "assets/icons/SkipFwd.png";
+  static const share = "assets/icons/Share.png";
+}
+
 TextStyle get titleStyle {
-  return GoogleFonts.roboto(
+  return GoogleFonts.poppins(
       textStyle: TextStyle(
-          fontSize: 30.sp,
+          fontSize: 20.sp,
           fontWeight: FontWeight.w600,
           color: Color.fromRGBO(255, 255, 255, 1)));
 }
 
 TextStyle get subtitleStyle {
-  return GoogleFonts.lato(
+  return GoogleFonts.poppins(
       textStyle: TextStyle(
-          fontSize: 16.sp,
+          fontSize: 12.sp,
           fontWeight: FontWeight.w400,
           color: Color.fromRGBO(255, 255, 255, 1)));
 }

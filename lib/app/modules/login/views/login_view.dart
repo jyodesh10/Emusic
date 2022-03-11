@@ -1,5 +1,4 @@
 import 'package:emusic/app/constants/constants.dart';
-import 'package:emusic/app/modules/register/views/register_view.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/custombutton.dart';
 import 'package:emusic/app/widgets/input_field.dart';
@@ -29,7 +28,7 @@ class LoginView extends GetView<LoginController> {
                       width: double.infinity,
                       padding: EdgeInsets.only(bottom: 30.sp),
                       decoration: BoxDecoration(
-                          color: Color.fromRGBO(50, 35, 196, 1),
+                          color: Color.fromRGBO(7, 83, 152, 1),
                           boxShadow: [
                             BoxShadow(
                                 color: AppColors.shadow,
@@ -44,7 +43,7 @@ class LoginView extends GetView<LoginController> {
                       width: double.infinity,
                       padding: EdgeInsets.only(bottom: 30.sp),
                       decoration: BoxDecoration(
-                          color: Color.fromRGBO(8, 94, 224, 1),
+                          color: Color.fromRGBO(8, 95, 174, 1),
                           boxShadow: [
                             BoxShadow(
                                 color: AppColors.shadow,
@@ -59,7 +58,7 @@ class LoginView extends GetView<LoginController> {
                       width: double.infinity,
                       padding: EdgeInsets.only(bottom: 30.sp),
                       decoration: BoxDecoration(
-                          color: Color.fromRGBO(13, 133, 243, 1),
+                          color: Color.fromRGBO(11, 119, 218, 1),
                           boxShadow: [
                             BoxShadow(
                                 color: AppColors.shadow,
@@ -68,9 +67,9 @@ class LoginView extends GetView<LoginController> {
                           ],
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(200))),
-                      child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Text('Login', style: titleStyle)),
+                      // child: Align(
+                      //     alignment: Alignment.bottomCenter,
+                      //     child: Text('Login', style: titleStyle)),
                     ),
                     Container(
                       height: 236.sp,
@@ -105,13 +104,18 @@ class LoginView extends GetView<LoginController> {
                     ),
                     Padding(
                         padding: EdgeInsets.only(
-                          top: 355,
+                          top: 300,
                           left: 23,
                         ),
                         child: Container(
                           padding: EdgeInsets.only(right: 20),
                           child: Column(
                             children: [
+                              Text('Login',
+                                  style: titleStyle.copyWith(fontSize: 30.sp)),
+                              SizedBox(
+                                height: 60.sp,
+                              ),
                               MyInputField(
                                 title: 'email',
                                 icon: Icon(

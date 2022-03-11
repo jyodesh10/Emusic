@@ -55,7 +55,7 @@ class MyInputField extends StatelessWidget {
           label: Text(
             title,
             style: subtitleStyle.copyWith(
-                fontSize: 16.sp, color: Colors.grey.shade600),
+                fontSize: 15.sp, color: Colors.grey.shade600),
           ),
           hintText: hint,
           hintStyle: subtitleStyle.copyWith(color: Colors.grey.shade300),

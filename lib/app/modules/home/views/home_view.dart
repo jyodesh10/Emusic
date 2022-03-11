@@ -1,5 +1,6 @@
 import 'package:emusic/app/constants/constants.dart';
 import 'package:emusic/app/routes/app_pages.dart';
+import 'package:emusic/app/widgets/customdrawer.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,9 +15,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainBackground,
-      drawer: Drawer(
-        backgroundColor: Colors.black,
-      ),
+      drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +23,7 @@ class HomeView extends GetView<HomeController> {
             SizedBox(
               height: 10.sp,
             ),
-            buildAppBar(),
+            buildAppBar(context),
             SizedBox(
               height: 40.sp,
             ),
@@ -46,7 +45,7 @@ class HomeView extends GetView<HomeController> {
             ),
             buildHomeTiles('Top Albums'),
             SizedBox(
-              height: 25.sp,
+              height: 100.sp,
             ),
           ],
         ),
@@ -56,32 +55,35 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  buildAppBar() {
+  buildAppBar(context) {
     return AppBar(
       elevation: 0,
       backgroundColor: AppColors.mainBackground,
-      leading: IconButton(
-          onPressed: () {
-            scaffoldKey.currentState?.openDrawer();
-          },
-          icon: Icon(
-            Icons.menu,
-            size: 22.sp,
-            color: Colors.black,
-          )),
+      automaticallyImplyLeading: false,
+      leading: Builder(
+        builder: (context) => IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            icon: Icon(
+              Icons.menu,
+              size: 22.sp,
+              color: Colors.black,
+            )),
+      ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Good Evening,",
-            style: titleStyle.copyWith(color: Colors.black, fontSize: 25.sp),
+            style: titleStyle.copyWith(color: Colors.black, fontSize: 20.sp),
           ),
           Text(
             "Jyodesh",
             style: subtitleStyle.copyWith(
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
-                fontSize: 20.sp),
+                fontSize: 15.sp),
           ),
         ],
       ),
@@ -109,12 +111,12 @@ class HomeView extends GetView<HomeController> {
                   style: subtitleStyle.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
-                      fontSize: 20.sp)),
+                      fontSize: 16.sp)),
               Text('See All',
                   style: subtitleStyle.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
-                      fontSize: 12.sp)),
+                      fontSize: 10.sp)),
             ],
           ),
         ),
@@ -122,7 +124,7 @@ class HomeView extends GetView<HomeController> {
           height: 20.sp,
         ),
         Container(
-          height: 130,
+          height: 130.sp,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: 10,
@@ -144,7 +146,7 @@ class HomeView extends GetView<HomeController> {
             Get.toNamed(Routes.ARTIST);
           },
           child: CircleAvatar(
-            radius: 50.r,
+            radius: 50,
             backgroundImage: ExactAssetImage('assets/images/artist.png'),
           ),
         ),
@@ -156,7 +158,7 @@ class HomeView extends GetView<HomeController> {
               style: subtitleStyle.copyWith(
                   fontWeight: FontWeight.w400,
                   color: Colors.black,
-                  fontSize: 15.sp)),
+                  fontSize: 10.sp)),
         )
       ],
     );
