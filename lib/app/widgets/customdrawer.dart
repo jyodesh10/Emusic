@@ -45,39 +45,50 @@ class CustomDrawer extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30))),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      buildDrawerItemTile(
-                          'Now Playing', Icons.audiotrack, () {}),
-                      buildDrawerItemTile(
-                          'Artists', Icons.my_library_music, () {}),
-                      buildDrawerItemTile(
-                          'Albums', Icons.audio_file_rounded, () {}),
-                      buildDrawerItemTile('Genres', Icons.movie_filter, () {}),
-                      buildDrawerItemTile('Merch Store', Icons.store, () {
-                        Get.toNamed(Routes.MERCHSTORE);
-                      }),
-                      buildDrawerItemTile('About', Icons.info_rounded, () {}),
-                      buildDrawerItemTile('Log out', Icons.logout, () {
-                        Get.offAllNamed(Routes.LOGIN);
-                      }),
-                      buildDrawerItemTile('Not Subscribed', Icons.close, () {
-                        Get.offAllNamed(Routes.SUBSCRIPTION);
-                      }),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      'Designed by:\n Jyodesh',
-                      style: TextStyle(fontSize: 10.sp),
+              child: SingleChildScrollView(
+                physics: ScrollPhysics(parent: BouncingScrollPhysics()),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        buildDrawerItemTile(
+                            'Now Playing', Icons.audiotrack, () {}),
+                        buildDrawerItemTile('Home', Icons.home_filled, () {
+                          Get.toNamed(Routes.HOME);
+                        }),
+                        buildDrawerItemTile('Artists', Icons.my_library_music,
+                            () {
+                          Get.toNamed(Routes.ARTIST);
+                        }),
+                        buildDrawerItemTile(
+                            'Albums', Icons.audio_file_rounded, () {}),
+                        buildDrawerItemTile(
+                            'Genres', Icons.movie_filter, () {}),
+                        buildDrawerItemTile('Merch Store', Icons.store, () {
+                          Get.toNamed(Routes.MERCHSTORE);
+                        }),
+                        buildDrawerItemTile('About', Icons.info_rounded, () {
+                          Get.toNamed(Routes.ABOUT);
+                        }),
+                        buildDrawerItemTile('Log out', Icons.logout, () {
+                          Get.offAllNamed(Routes.LOGIN);
+                        }),
+                        buildDrawerItemTile('Not Subscribed', Icons.close, () {
+                          Get.offAllNamed(Routes.SUBSCRIPTION);
+                        }),
+                      ],
                     ),
-                  )
-                ],
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        'Designed by:\n Jyodesh',
+                        style: TextStyle(fontSize: 10.sp),
+                      ),
+                    )
+                  ],
+                ),
               )),
         ],
       ),
@@ -86,6 +97,7 @@ class CustomDrawer extends StatelessWidget {
 
   buildDrawerItemTile(title, IconData icon, VoidCallback ontap) {
     return ListTile(
+      minVerticalPadding: 0,
       leading: Icon(
         icon,
         color: Colors.black,

@@ -18,7 +18,7 @@ class LoginView extends GetView<LoginController> {
         backgroundColor: AppColors.mainBackground,
         body: SingleChildScrollView(
           child: Container(
-            height: 800.h,
+            // height: 800.h,
             child: Column(
               children: [
                 Stack(

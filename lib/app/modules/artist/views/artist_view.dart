@@ -57,7 +57,7 @@ class ArtistView extends GetView<ArtistController> {
       ),
 
       floatingActionButton: FloatingMusicWidget(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

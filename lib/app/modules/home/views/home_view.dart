@@ -17,6 +17,7 @@ class HomeView extends GetView<HomeController> {
       backgroundColor: AppColors.mainBackground,
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
+        physics: ScrollPhysics(parent: BouncingScrollPhysics()),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -51,7 +52,7 @@ class HomeView extends GetView<HomeController> {
         ),
       ),
       floatingActionButton: FloatingMusicWidget(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

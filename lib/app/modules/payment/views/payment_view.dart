@@ -29,7 +29,7 @@ class PaymentView extends GetView<PaymentController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 40.sp,
+              height: 30.sp,
             ),
             IconButton(
                 onPressed: () => Get.back(),
@@ -38,9 +38,7 @@ class PaymentView extends GetView<PaymentController> {
                   color: Colors.white,
                   size: 22.sp,
                 )),
-            SizedBox(
-              height: 40.sp,
-            ),
+            Spacer(),
             Center(
               child: Text(
                 'Payment',
@@ -48,9 +46,7 @@ class PaymentView extends GetView<PaymentController> {
                     titleStyle.copyWith(fontSize: 30.sp, color: Colors.white),
               ),
             ),
-            SizedBox(
-              height: 50.sp,
-            ),
+            Spacer(),
             Text(
               'Payment Methods',
               style: titleStyle.copyWith(
@@ -58,6 +54,9 @@ class PaymentView extends GetView<PaymentController> {
                   fontSize: 16.sp,
                   color: Colors.white),
             ),
+            SizedBox(
+              height: 10.sp,
+            )
           ],
         ),
       ),

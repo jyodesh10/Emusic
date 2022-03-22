@@ -30,7 +30,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 40.sp,
+              height: 30.sp,
             ),
             IconButton(
                 onPressed: () => Get.toNamed(Routes.HOME),
@@ -39,9 +39,7 @@ class SubscriptionView extends GetView<SubscriptionController> {
                   color: Colors.white,
                   size: 22.sp,
                 )),
-            SizedBox(
-              height: 40.sp,
-            ),
+            Spacer(),
             Center(
               child: Text(
                 'Subscription',
@@ -49,15 +47,16 @@ class SubscriptionView extends GetView<SubscriptionController> {
                     titleStyle.copyWith(fontSize: 30.sp, color: Colors.white),
               ),
             ),
-            SizedBox(
-              height: 50.sp,
-            ),
+            Spacer(),
             Text(
               'Available',
               style: titleStyle.copyWith(
                   fontWeight: FontWeight.w400,
                   fontSize: 16.sp,
                   color: Colors.white),
+            ),
+            SizedBox(
+              height: 10.sp,
             ),
           ],
         ),

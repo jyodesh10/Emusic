@@ -14,6 +14,7 @@ mixin AppImages {
   static const vinyl2 = "assets/images/vinyl2.png";
   static const merch = "assets/images/merch.png";
   static const artist = "assets/images/artist.png";
+  static const developer = "assets/images/jyodesh.png";
 }
 
 mixin AppIcons {
