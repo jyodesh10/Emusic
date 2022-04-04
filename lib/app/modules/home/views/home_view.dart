@@ -25,9 +25,46 @@ class HomeView extends GetView<HomeController> {
               height: 10.sp,
             ),
             buildAppBar(context),
-            SizedBox(
-              height: 40.sp,
+            Hero(
+              tag: 'search',
+              child: GestureDetector(
+                onTap: () => Get.toNamed(Routes.SEARCH),
+                child: Container(
+                    margin: EdgeInsets.all(20),
+                    // padding: EdgeInsets.all(10),
+                    height: 50,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 10,
+                              // blurStyle: BlurStyle.solid,
+                              // spreadRadius: 2,
+                              color: AppColors.shadow,
+                              offset: Offset(0, 2))
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          Icons.search,
+                          size: 22.sp,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text('Songs, Albums and Artists')
+                      ],
+                    )),
+              ),
             ),
+            // SizedBox(
+            //   height: 40.sp,
+            // ),
             buildHomeTiles('Your Favourite Artists'),
             SizedBox(
               height: 25.sp,
@@ -91,6 +128,12 @@ class HomeView extends GetView<HomeController> {
       actions: [
         CircleAvatar(
           radius: 30,
+          backgroundColor: Colors.transparent,
+          child: Image.asset(
+            AppImages.developer,
+            height: 100,
+            fit: BoxFit.contain,
+          ),
         ),
         SizedBox(
           width: 20.sp,

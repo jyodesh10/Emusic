@@ -1,3 +1,5 @@
+import 'package:emusic/app/constants/firebase_auth_constants.dart';
+import 'package:emusic/app/modules/login/controllers/login_controller.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +8,9 @@ import '../constants/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({Key? key}) : super(key: key);
+  CustomDrawer({Key? key}) : super(key: key);
+
+  final google = Google();
 
   @override
   Widget build(BuildContext context) {
@@ -53,19 +57,15 @@ class CustomDrawer extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        buildDrawerItemTile(
-                            'Now Playing', Icons.audiotrack, () {}),
+                        buildDrawerItemTile('Search', Icons.search_rounded, () {
+                          Get.toNamed(Routes.SEARCH);
+                        }),
                         buildDrawerItemTile('Home', Icons.home_filled, () {
                           Get.toNamed(Routes.HOME);
                         }),
-                        buildDrawerItemTile('Artists', Icons.my_library_music,
-                            () {
-                          Get.toNamed(Routes.ARTIST);
-                        }),
                         buildDrawerItemTile(
-                            'Albums', Icons.audio_file_rounded, () {}),
-                        buildDrawerItemTile(
-                            'Genres', Icons.movie_filter, () {}),
+                            'Playlists', Icons.playlist_play, () {}),
+                        buildDrawerItemTile('Downloads', Icons.download, () {}),
                         buildDrawerItemTile('Merch Store', Icons.store, () {
                           Get.toNamed(Routes.MERCHSTORE);
                         }),
@@ -73,6 +73,8 @@ class CustomDrawer extends StatelessWidget {
                           Get.toNamed(Routes.ABOUT);
                         }),
                         buildDrawerItemTile('Log out', Icons.logout, () {
+                          auth.signOut();
+                          google.handleLogOut();
                           Get.offAllNamed(Routes.LOGIN);
                         }),
                         buildDrawerItemTile('Not Subscribed', Icons.close, () {

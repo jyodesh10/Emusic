@@ -21,9 +21,11 @@ mixin AppIcons {
   static const esewa = "assets/icons/esewa.png";
   static const khalti = "assets/icons/khalti.png";
   static const pause = "assets/icons/Pause.png";
+  static const play = "assets/icons/play.png";
   static const skipback = "assets/icons/SkipBack.png";
   static const skipfwd = "assets/icons/SkipFwd.png";
   static const share = "assets/icons/Share.png";
+  static const google = "assets/icons/google.png";
 }
 
 TextStyle get titleStyle {
@@ -40,4 +42,15 @@ TextStyle get subtitleStyle {
           fontSize: 12.sp,
           fontWeight: FontWeight.w400,
           color: Color.fromRGBO(255, 255, 255, 1)));
+}
+
+extension durationExtensions on Duration {
+  String get timeFormat {
+    String minute = int.parse(
+            this.toString().split('.').first.padLeft(8, "0").split(':')[1])
+        .toString();
+    String second =
+        this.toString().split('.').first.padLeft(8, "0").split(':')[2];
+    return ("$minute:$second");
+  }
 }

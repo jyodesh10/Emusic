@@ -1,6 +1,7 @@
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/customdrawer.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
+import 'package:emusic/app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,9 @@ import '../../../constants/constants.dart';
 import '../controllers/nowplaying_controller.dart';
 
 class NowplayingView extends GetView<NowplayingController> {
+  @override
+  NowplayingController controller = Get.put(NowplayingController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,15 +59,41 @@ class NowplayingView extends GetView<NowplayingController> {
               ),
             ),
           ),
-          Text('Alice In Chains',
+          Text('Alice in Chains',
               style: titleStyle.copyWith(color: Colors.black)),
+          // Obx(() => controller.musicList.value != null
+          //     ? Text('Alice in Chains', style: titleStyle.copyWith(color: Colors.black))
+          //     : Text('data')),
           Text('Them Bones',
               style: titleStyle.copyWith(fontSize: 16.sp, color: Colors.black)),
           Text('Dirt',
               style: titleStyle.copyWith(fontSize: 14.sp, color: Colors.black)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              Obx(
+                () => CircleAvatar(
+                  backgroundColor: controller.isOnRepeat.value
+                      ? AppColors.primaryClr
+                      : Colors.transparent,
+                  radius: 30,
+                  child: Center(
+                    child: IconButton(
+                        onPressed: () {
+                          controller.repeat();
+
+                          // CustomSnackbar(title: 'title', message: 'message');
+                        },
+                        icon: Icon(
+                          Icons.repeat,
+                          // size: 22.sp,
+                          color: controller.isOnRepeat.value
+                              ? Colors.white
+                              : Colors.black,
+                        )),
+                  ),
+                ),
+              ),
               Center(
                 child: MaterialButton(
                   onPressed: () {},
@@ -78,40 +108,75 @@ class NowplayingView extends GetView<NowplayingController> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 70.sp,
-              ),
               IconButton(
                   onPressed: () {},
                   icon: Icon(
                     Icons.share,
-                    size: 22.sp,
+                    // size: 22.sp,
                     color: Colors.black,
                   )),
-              SizedBox(
-                width: 30.sp,
-              )
             ],
           ),
           SizedBox(
             height: 30.sp,
           ),
+
           Container(
               padding: EdgeInsets.symmetric(horizontal: 30.sp),
-              child: Image.asset(
-                'assets/icons/slider.png',
+              child: Column(
+                children: [
+                  Obx(
+                    () => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(controller.position.value.timeFormat),
+                        Text(controller.duration.value.timeFormat)
+                      ],
+                    ),
+                  ),
+                  Obx(
+                    () => Slider(
+                        activeColor: AppColors.primaryClr,
+                        inactiveColor: Colors.grey.shade400,
+                        value: controller.position.value.inSeconds.toDouble(),
+                        min: 0.0,
+                        max: controller.duration.value.inSeconds.toDouble() +
+                            1.0,
+                        onChanged: (double value) {
+                          controller.setPositionValue = value;
+                        }),
+                  ),
+                ],
               )),
+
           SizedBox(
             height: 30.sp,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(AppIcons.skipback),
-              Image.asset(AppIcons.pause),
-              Image.asset(AppIcons.skipfwd)
-            ],
+          Obx(
+            () => Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(AppIcons.skipback),
+                SizedBox(
+                  width: 20.sp,
+                ),
+                InkWell(
+                  onTap: () {
+                    controller.play();
+                    controller.pause();
+                    controller.playingStatus();
+                  },
+                  child: Image.asset(controller.isPlaying.value
+                      ? AppIcons.pause
+                      : AppIcons.play),
+                ),
+                SizedBox(
+                  width: 20.sp,
+                ),
+                Image.asset(AppIcons.skipfwd)
+              ],
+            ),
           )
         ],
       ),

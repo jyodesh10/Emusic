@@ -1,11 +1,14 @@
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/modules/nowplaying/controllers/nowplaying_controller.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class FloatingMusicWidget extends StatelessWidget {
-  const FloatingMusicWidget({Key? key}) : super(key: key);
+  FloatingMusicWidget({Key? key}) : super(key: key);
+
+  NowplayingController nowplayingController = Get.put(NowplayingController());
 
   @override
   Widget build(BuildContext context) {
@@ -25,38 +28,45 @@ class FloatingMusicWidget extends StatelessWidget {
             child: Stack(
               alignment: Alignment.centerLeft,
               children: [
-                Container(
-                  height: 80.sp,
-                  width: 320.sp,
-                  decoration: BoxDecoration(
-                      color: AppColors.primaryClr,
-                      borderRadius: BorderRadius.circular(100.r)),
-                  child: Center(
-                    child: ListTile(
-                      contentPadding:
-                          EdgeInsets.only(left: 110.sp, right: 26.sp),
-                      title: Text(
-                        'Them Bones',
-                        style: subtitleStyle.copyWith(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                Obx(
+                  (() => Container(
+                        height: 80.sp,
+                        width: 320.sp,
+                        decoration: BoxDecoration(
+                            color: AppColors.primaryClr,
+                            borderRadius: BorderRadius.circular(100.r)),
+                        child: Center(
+                          child: ListTile(
+                            contentPadding:
+                                EdgeInsets.only(left: 110.sp, right: 26.sp),
+                            title: Text(
+                              'Them Bones',
+                              style: subtitleStyle.copyWith(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Alice in Chains',
+                              style: subtitleStyle.copyWith(
+                                fontSize: 12.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                            trailing: GestureDetector(
+                              // onTap: nowplayingController.playingStatus(),
+                              child: Image.asset(
+                                nowplayingController.isPlaying.value
+                                    ? 'assets/icons/Pause.png'
+                                    : AppIcons.play,
+                                color: Colors.white,
+                                height: 20.sp,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        'Alice in Chains',
-                        style: subtitleStyle.copyWith(
-                          fontSize: 12.sp,
-                          color: Colors.white,
-                        ),
-                      ),
-                      trailing: Image.asset(
-                        'assets/icons/Pause.png',
-                        color: Colors.white,
-                        height: 24.sp,
-                      ),
-                    ),
-                  ),
+                      )),
                 ),
                 Positioned(
                   right: 196.8.sp,

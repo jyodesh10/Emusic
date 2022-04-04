@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  flutter_media_metadata
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

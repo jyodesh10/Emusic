@@ -1,15 +1,20 @@
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/constants/firebase_auth_constants.dart';
+import 'package:emusic/app/utils/validators.dart';
 import 'package:emusic/app/widgets/custombutton.dart';
 import 'package:emusic/app/widgets/input_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 import '../../../routes/app_pages.dart';
 import '../controllers/register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +46,23 @@ class RegisterView extends GetView<RegisterController> {
                     SizedBox(
                       height: 50.sp,
                     ),
-                    CustomButton(title: 'Register'),
+                    Obx(
+                      () => CustomButton(
+                        title: controller.loading.value
+                            ? 'Processing'
+                            : 'Register',
+                        ontap: () {
+                          controller.loading(true);
+                          if (_formKey.currentState!.validate()) {
+                            authController.register(
+                                controller.email.text.trim(),
+                                controller.password.text.trim());
+                          } else {
+                            Get.snackbar('Error', 'Registration');
+                          }
+                        },
+                      ),
+                    ),
                     SizedBox(
                       height: 20.sp,
                     ),
@@ -105,57 +126,71 @@ class RegisterView extends GetView<RegisterController> {
             BoxShadow(
                 color: AppColors.shadow, blurRadius: 10, offset: Offset(0, 2))
           ]),
-      child: Column(
-        children: [
-          Text(
-            'User Details',
-            style: subtitleStyle.copyWith(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
-          ),
-          SizedBox(
-            height: 15.sp,
-          ),
-          MyInputField(
-            icon: Icon(
-              Icons.email,
-              size: 18.sp,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Text(
+              'User Details',
+              style: subtitleStyle.copyWith(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800),
             ),
-            title: 'Email',
-          ),
-          SizedBox(
-            height: 15.sp,
-          ),
-          MyInputField(
-            icon: Icon(
-              Icons.person,
-              size: 18.sp,
+            SizedBox(
+              height: 15.sp,
             ),
-            title: 'Username',
-          ),
-          SizedBox(
-            height: 15.sp,
-          ),
-          MyInputField(
-            icon: Icon(
-              Icons.password,
-              size: 18.sp,
+            MyInputField(
+              controller: controller.email,
+              validator: (v) => validateEmail(string: v),
+              icon: Icon(
+                Icons.email,
+                size: 18.sp,
+              ),
+              title: 'Email',
             ),
-            title: 'Password',
-          ),
-          SizedBox(
-            height: 15.sp,
-          ),
-          MyInputField(
-            icon: Icon(
-              Icons.password,
-              size: 18.sp,
+            SizedBox(
+              height: 15.sp,
             ),
-            title: 'Confirm Password',
-          ),
-          SizedBox(
-            height: 15.sp,
-          ),
-        ],
+            MyInputField(
+              controller: controller.username,
+              validator: (v) => validateIsEmpty(string: v),
+              icon: Icon(
+                Icons.person,
+                size: 18.sp,
+              ),
+              title: 'Username',
+            ),
+            SizedBox(
+              height: 15.sp,
+            ),
+            MyInputField(
+              controller: controller.password,
+              validator: (v) => validatePassword(string: v),
+              icon: Icon(
+                Icons.password,
+                size: 18.sp,
+              ),
+              title: 'Password',
+            ),
+            SizedBox(
+              height: 15.sp,
+            ),
+            MyInputField(
+              controller: controller.confirmpassword,
+              validator: (v) => confirmPassword(
+                  password: controller.password.text, cPassword: v),
+              icon: Icon(
+                Icons.password,
+                size: 18.sp,
+              ),
+              title: 'Confirm Password',
+            ),
+            SizedBox(
+              height: 15.sp,
+            ),
+          ],
+        ),
       ),
     );
   }

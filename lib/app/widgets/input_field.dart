@@ -12,6 +12,7 @@ class MyInputField extends StatelessWidget {
   final bool customtitle;
   final bool? containsPadding;
   final Icon? icon;
+  final FormFieldValidator? validator;
   const MyInputField(
       {Key? key,
       required this.title,
@@ -21,15 +22,16 @@ class MyInputField extends StatelessWidget {
       this.ismultiline = false,
       this.customtitle = false,
       this.containsPadding = true,
-      this.icon})
+      this.icon,
+      this.validator})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50.sp,
+      // height: 50,
       // padding: EdgeInsets.symmetric(horizontal: 40.sp),
       // color: Colors.white,
-      width: double.infinity,
+      // width: double.infinity,
       // decoration: BoxDecoration(
       //   boxShadow: [
       //   BoxShadow(
@@ -45,6 +47,8 @@ class MyInputField extends StatelessWidget {
             color: Colors.grey.shade600, fontSize: 16.sp),
         minLines: ismultiline! ? 2 : null,
         maxLines: ismultiline! ? 6 : null,
+        validator: validator,
+
         // expands: true,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 10),
@@ -68,6 +72,106 @@ class MyInputField extends StatelessWidget {
               borderSide: BorderSide(color: Colors.grey.shade300)),
         ),
       ),
+    );
+  }
+}
+
+class InputField extends StatelessWidget {
+  const InputField(
+      {Key? key,
+      this.controller,
+      this.hintText = '',
+      this.icon = Icons.error,
+      this.validator,
+      this.isMultiline = false,
+      required this.label,
+      this.widget,
+      this.isReadonly = false,
+      this.obscureText = false})
+      : super(key: key);
+  final bool isMultiline;
+  // ignore: prefer_typing_uninitialized_variables
+  final validator;
+  final TextEditingController? controller;
+  final String hintText;
+  final String label;
+  final IconData? icon;
+  final Image? widget;
+  final bool isReadonly;
+  final bool obscureText;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      // height: getProportionateScreenHeight(60),
+      padding: EdgeInsets.symmetric(
+        horizontal: 20,
+        // vertical: getProportionateScreenHeight(10),
+      ),
+      child: obscureText
+          ? TextFormField(
+              obscureText: obscureText,
+              readOnly: isReadonly,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              focusNode: FocusNode(),
+              controller: controller,
+              validator: validator,
+              decoration: InputDecoration(
+                  labelText: label,
+                  labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w400, fontSize: 16),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                        color: Color.fromRGBO(164, 164, 164, .5)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                        color: Color.fromRGBO(164, 164, 164, 1)),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  prefixIcon: widget ??
+                      Icon(
+                        icon,
+                      ),
+                  hintText: hintText,
+                  hintStyle: const TextStyle(color: Colors.grey)),
+            )
+          : TextFormField(
+              obscureText: obscureText,
+              readOnly: isReadonly,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              focusNode: FocusNode(),
+              controller: controller,
+              validator: validator,
+              maxLines: isMultiline ? 4 : null,
+              decoration: InputDecoration(
+                  labelText: label,
+                  labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w400, fontSize: 16),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                        color: Color.fromRGBO(164, 164, 164, .5)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                        color: Color.fromRGBO(164, 164, 164, 1)),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  prefixIcon: widget ??
+                      Icon(
+                        icon,
+                      ),
+                  hintText: hintText,
+                  hintStyle: const TextStyle(color: Colors.grey)),
+            ),
     );
   }
 }
