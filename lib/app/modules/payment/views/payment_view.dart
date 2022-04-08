@@ -1,4 +1,6 @@
 import 'package:emusic/app/widgets/custombutton.dart';
+import 'package:esewa_pnp/esewa.dart';
+import 'package:esewa_pnp/esewa_pnp.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -6,7 +8,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants/constants.dart';
 import '../controllers/payment_controller.dart';
 
-class PaymentView extends GetView<PaymentController> {
+class PaymentView extends StatefulWidget {
+  @override
+  State<PaymentView> createState() => _PaymentViewState();
+}
+
+class _PaymentViewState extends State<PaymentView> {
+  late ESewaPnp _esewaPnp;
+  late ESewaConfiguration _configuration;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _configuration = ESewaConfiguration(
+      clientID: "JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R",
+      secretKey: "BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==",
+      environment: ESewaConfiguration.ENVIRONMENT_TEST,
+    );
+    _esewaPnp = ESewaPnp(configuration: _configuration);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +113,22 @@ class PaymentView extends GetView<PaymentController> {
             // SizedBox(
             //   height: 150.sp,
             // ),
-            Spacer(),
+            // Spacer(),
+            ESewaPaymentButton(
+              this._esewaPnp,
+              amount: 1000,
+              productId: '1',
+              productName: 'Emusic Subscription',
+              callBackURL: '',
+              onSuccess: (result) {
+                ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+                    Color.fromRGBO(65, 161, 36, 1), result.message.toString()));
+              },
+              onFailure: (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    buildSnackBar(Colors.red, e.message.toString()));
+              },
+            ),
             Center(
                 child: CustomButton(
               title: 'Proceed',
@@ -101,6 +140,13 @@ class PaymentView extends GetView<PaymentController> {
           ],
         ),
       ),
+    );
+  }
+
+  buildSnackBar(Color color, String msg) {
+    return SnackBar(
+      backgroundColor: color,
+      content: Text(msg),
     );
   }
 

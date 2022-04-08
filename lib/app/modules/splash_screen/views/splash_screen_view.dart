@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/splash_screen_controller.dart';
 
 class SplashScreenView extends GetView<SplashScreenController> {
+  @override
   SplashScreenController controller = Get.put(SplashScreenController());
   @override
   Widget build(BuildContext context) {

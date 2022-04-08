@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/about/bindings/about_binding.dart';
 import '../modules/about/views/about_view.dart';
+import '../modules/adminpanel/bindings/adminpanel_binding.dart';
+import '../modules/adminpanel/views/adminpanel_view.dart';
 import '../modules/artist/bindings/artist_binding.dart';
 import '../modules/artist/views/artist_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -51,11 +53,11 @@ class AppPages {
       page: () => SplashScreenView(),
       binding: SplashScreenBinding(),
     ),
-    GetPage(
-      name: _Paths.ARTIST,
-      page: () => ArtistView(),
-      binding: ArtistBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.ARTIST,
+    //   page: () => ArtistView(),
+    //   binding: ArtistBinding(),
+    // ),
     GetPage(
       name: _Paths.MERCHSTORE,
       page: () => MerchstoreView(),
@@ -76,15 +78,20 @@ class AppPages {
       page: () => AboutView(),
       binding: AboutBinding(),
     ),
-    GetPage(
-      name: _Paths.NOWPLAYING,
-      page: () => NowplayingView(),
-      binding: NowplayingBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.NOWPLAYING,
+    //   page: () => NowplayingView(),
+    //   binding: NowplayingBinding(),
+    // ),
     GetPage(
       name: _Paths.SEARCH,
       page: () => SearchView(),
       binding: SearchBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMINPANEL,
+      page: () => AdminpanelView(),
+      binding: AdminpanelBinding(),
     ),
   ];
 }

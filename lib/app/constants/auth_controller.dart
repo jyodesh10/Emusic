@@ -7,9 +7,11 @@ import 'package:emusic/app/modules/login/views/login_view.dart';
 import 'package:emusic/app/modules/register/controllers/register_controller.dart';
 import 'package:emusic/app/modules/register/views/register_view.dart';
 import 'package:emusic/app/modules/splash_screen/views/splash_screen_view.dart';
+import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
@@ -25,20 +27,21 @@ class AuthController extends GetxController {
     firebaseUser = Rx<User?>(auth.currentUser);
     firebaseUser.bindStream(auth.userChanges());
 
-    ever(firebaseUser, _setInitialScreen);
+    // ever(firebaseUser, _setInitialScreen);
   }
 
-  _setInitialScreen(User? user) {
-    if (user != null) {
-      // if the user is not found then the user is navigated to the Register Screen
+  // _setInitialScreen(User? user) {
+  //   if (user != null) {
+  //     // if the user is not found then the user is navigated to the Register Screen
+  //     Get.toNamed(Routes.HOME);
 
-      Get.offAll(() => HomeView());
-    } else {
-      // if the user exists and logged in the the user is navigated to the Home Screen
-      // Get.snackbar("Succefully", "Registered");
-      Get.offAll(() => LoginView());
-    }
-  }
+  //     // Get.offAll(() => HomeView());
+  //   } else {
+  //     // if the user exists and logged in the the user is navigated to the Home Screen
+  //     // Get.snackbar("Succefully", "Registered");
+  //     Get.offAll(() => LoginView());
+  //   }
+  // }
 
   void register(String email, password) async {
     try {
@@ -56,7 +59,13 @@ class AuthController extends GetxController {
 
   void login(String email, password) async {
     try {
-      await auth.signInWithEmailAndPassword(email: email, password: password);
+      final user = (await auth.signInWithEmailAndPassword(
+              email: email, password: password))
+          .user;
+      if (user != null) {
+        Get.offAllNamed(Routes.HOME);
+        Fluttertoast.showToast(msg: 'You are now logged in');
+      }
     } on FirebaseAuthException catch (e) {
       buildSnackbar("Error Login", e.message.toString(), Colors.white,
           Color.fromARGB(188, 219, 5, 5));

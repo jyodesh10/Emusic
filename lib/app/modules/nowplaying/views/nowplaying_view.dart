@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emusic/app/controller/app_controller.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/customdrawer.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
@@ -9,9 +11,30 @@ import 'package:get/get.dart';
 import '../../../constants/constants.dart';
 import '../controllers/nowplaying_controller.dart';
 
-class NowplayingView extends GetView<NowplayingController> {
+class NowplayingView extends StatefulWidget {
+  final String artist;
+  final String album;
+  final String song;
+  final String album_art;
+  final String song_url;
+
+  NowplayingView(
+      {Key? key,
+      required this.artist,
+      required this.album,
+      required this.song,
+      required this.album_art,
+      required this.song_url})
+      : super(key: key);
+
+  @override
+  State<NowplayingView> createState() => _NowplayingViewState();
+}
+
+class _NowplayingViewState extends State<NowplayingView> {
   @override
   NowplayingController controller = Get.put(NowplayingController());
+  AppController appcontroller = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +74,22 @@ class NowplayingView extends GetView<NowplayingController> {
               // foregroundImage: AssetImage(AppImages.vinyl2),
               backgroundImage: AssetImage(AppImages.vinyl2),
               child: CircleAvatar(
-                radius: 60.r,
-                child: Image.asset(
-                  AppImages.artist,
-                  fit: BoxFit.fill,
-                ),
-              ),
+                  radius: 60.r, backgroundImage: NetworkImage(widget.album_art!)
+
+                  // child: Image.asset(
+                  //   AppImages.artist,
+                  //   fit: BoxFit.fill,
+                  // ),
+                  ),
             ),
           ),
-          Text('Alice in Chains',
-              style: titleStyle.copyWith(color: Colors.black)),
+          Text(widget.artist!, style: titleStyle.copyWith(color: Colors.black)),
           // Obx(() => controller.musicList.value != null
           //     ? Text('Alice in Chains', style: titleStyle.copyWith(color: Colors.black))
           //     : Text('data')),
-          Text('Them Bones',
+          Text(widget.song!,
               style: titleStyle.copyWith(fontSize: 16.sp, color: Colors.black)),
-          Text('Dirt',
+          Text(widget.album!,
               style: titleStyle.copyWith(fontSize: 14.sp, color: Colors.black)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -76,7 +99,7 @@ class NowplayingView extends GetView<NowplayingController> {
                   backgroundColor: controller.isOnRepeat.value
                       ? AppColors.primaryClr
                       : Colors.transparent,
-                  radius: 30,
+                  radius: 25,
                   child: Center(
                     child: IconButton(
                         onPressed: () {
@@ -96,7 +119,10 @@ class NowplayingView extends GetView<NowplayingController> {
               ),
               Center(
                 child: MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    print('pressed');
+                    appcontroller.download(widget.song_url!);
+                  },
                   color: AppColors.primaryClr,
                   height: 20.sp,
                   elevation: 10,
@@ -109,7 +135,12 @@ class NowplayingView extends GetView<NowplayingController> {
                 ),
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.share(
+                      widget.album_art,
+                      'Listen to this Song on Emusic🔥🔥\n${widget.artist} - ${widget.song}',
+                    );
+                  },
                   icon: Icon(
                     Icons.share,
                     // size: 22.sp,
@@ -163,7 +194,7 @@ class NowplayingView extends GetView<NowplayingController> {
                 ),
                 InkWell(
                   onTap: () {
-                    controller.play();
+                    controller.play(widget.song_url);
                     controller.pause();
                     controller.playingStatus();
                   },

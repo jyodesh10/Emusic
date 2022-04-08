@@ -14,6 +14,7 @@ abstract class Routes {
   static const ABOUT = _Paths.ABOUT;
   static const NOWPLAYING = _Paths.NOWPLAYING;
   static const SEARCH = _Paths.SEARCH;
+  static const ADMINPANEL = _Paths.ADMINPANEL;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const ABOUT = '/about';
   static const NOWPLAYING = '/nowplaying';
   static const SEARCH = '/search';
+  static const ADMINPANEL = '/adminpanel';
 }

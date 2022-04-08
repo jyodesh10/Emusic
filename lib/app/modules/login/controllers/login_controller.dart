@@ -1,3 +1,4 @@
+import 'package:emusic/app/modules/home/views/home_view.dart';
 import 'package:emusic/app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -49,6 +50,7 @@ class Google {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
       Fluttertoast.showToast(msg: 'Google sign-in');
+      Get.to(() => HomeView());
     } on Exception catch (e) {
       CustomSnackbar(
         title: 'Google Sign in error',

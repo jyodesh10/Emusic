@@ -1,5 +1,6 @@
 import 'package:emusic/app/constants/auth_controller.dart';
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/modules/adminpanel/views/adminpanel_view.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/utils/validators.dart';
 import 'package:emusic/app/widgets/custombutton.dart';
@@ -175,6 +176,13 @@ class LoginView extends GetView<LoginController> {
                                           'Email or password',
                                           Colors.white,
                                           Color.fromARGB(188, 219, 5, 5));
+                                    }
+
+                                    if (controller.emailController.text ==
+                                            "jyodesh@gmail.com" &&
+                                        controller.passwordController.text ==
+                                            "jyodesh") {
+                                      Get.to(AdminpanelView());
                                     }
                                   },
                                 ),

@@ -44,7 +44,7 @@ class MyInputField extends StatelessWidget {
         cursorColor: Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
         controller: controller,
         style: subtitleStyle.copyWith(
-            color: Colors.grey.shade600, fontSize: 16.sp),
+            color: Colors.grey.shade600, fontSize: 15.sp),
         minLines: ismultiline! ? 2 : null,
         maxLines: ismultiline! ? 6 : null,
         validator: validator,

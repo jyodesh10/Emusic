@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/modules/artist/views/album_view.dart';
+import 'package:emusic/app/modules/artist/views/artist_view.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/customdrawer.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
@@ -10,6 +13,14 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  Stream<QuerySnapshot> collectionStream =
+      FirebaseFirestore.instance.collection('music').snapshots();
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> documentStream =
+      FirebaseFirestore.instance.collection('music').doc().get();
+
+  @override
+  HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +77,28 @@ class HomeView extends GetView<HomeController> {
             //   height: 40.sp,
             // ),
             buildHomeTiles('Your Favourite Artists'),
+            buildArtistsListview(),
             SizedBox(
               height: 25.sp,
             ),
             buildHomeTiles('Recommended for you'),
+            buildAlbumsListview(),
+            // buildAlbumsListview(),
             SizedBox(
               height: 25.sp,
             ),
             buildHomeTiles('Top Artists'),
-            SizedBox(
-              height: 25.sp,
-            ),
-            buildHomeTiles('Top Genres'),
+            buildArtistsListview(),
             SizedBox(
               height: 25.sp,
             ),
             buildHomeTiles('Top Albums'),
+            buildAlbumsListview(),
+
+            SizedBox(
+              height: 25.sp,
+            ),
+            buildHomeTiles('Top Genres'),
             SizedBox(
               height: 100.sp,
             ),
@@ -109,21 +126,29 @@ class HomeView extends GetView<HomeController> {
               color: Colors.black,
             )),
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Good Evening,",
-            style: titleStyle.copyWith(color: Colors.black, fontSize: 20.sp),
-          ),
-          Text(
-            "Jyodesh",
-            style: subtitleStyle.copyWith(
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-                fontSize: 15.sp),
-          ),
-        ],
+      title: Obx(
+        () => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              controller.morning.value
+                  ? 'Good Morning'
+                  : controller.afternoon.value
+                      ? 'Good Afternoon'
+                      : controller.evening.value
+                          ? 'Good Evening'
+                          : 'Good Night',
+              style: titleStyle.copyWith(color: Colors.black, fontSize: 20.sp),
+            ),
+            Text(
+              "Jyodesh",
+              style: subtitleStyle.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                  fontSize: 15.sp),
+            ),
+          ],
+        ),
       ),
       actions: [
         CircleAvatar(
@@ -167,39 +192,104 @@ class HomeView extends GetView<HomeController> {
         SizedBox(
           height: 20.sp,
         ),
-        Container(
-          height: 130.sp,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            itemExtent: 110.0,
-            itemBuilder: (BuildContext context, int index) {
-              return buildImageTextCard();
-            },
-          ),
-        )
       ],
     );
   }
 
-  buildImageTextCard() {
+  buildArtistsListview() {
+    return StreamBuilder(
+      stream: collectionStream,
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.grey,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryClr),
+            ),
+          );
+        }
+        if (snapshot.data == null) {
+          return Center(child: Text('No Data'));
+        }
+
+        return Container(
+          height: 130.sp,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data?.docs.length,
+            itemExtent: 110.0,
+            itemBuilder: (BuildContext context, int index) {
+              var result = snapshot.data?.docs[index];
+              return buildImageTextCard(result!['artist'], result['band_img'],
+                  () {
+                Get.to(ArtistView(result));
+              });
+
+              // result!['artist'], result!['band_img'], 'album');
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  buildAlbumsListview() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: collectionStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.grey,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryClr),
+            ),
+          );
+        }
+        if (snapshot.data == null) {
+          return Center(child: Text('No Data'));
+        }
+
+        return Container(
+          height: 130.sp,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data?.docs.first['album'].length,
+            itemExtent: 110.0,
+            itemBuilder: (BuildContext context, int index) {
+              var result = snapshot.data?.docs.first;
+              return buildImageTextCard(result!['album'][index]['album_name'],
+                  result!['album'][index]['album_art'], () {
+                Get.to(AlbumView(
+                  data: result,
+                  albumindex: index,
+                ));
+              });
+
+              // result!['artist'], result!['band_img'], 'album');
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  buildImageTextCard(String artistname, String bandimg, ontap) {
     return Column(
       children: [
         GestureDetector(
-          onTap: () {
-            Get.toNamed(Routes.ARTIST);
-          },
+          onTap: ontap,
           child: CircleAvatar(
             radius: 50,
-            backgroundImage: ExactAssetImage('assets/images/artist.png'),
+            backgroundImage: NetworkImage(bandimg),
           ),
         ),
         SizedBox(
           height: 10.sp,
         ),
         Center(
-          child: Text('Alice in Chains',
+          child: Text(artistname,
               style: subtitleStyle.copyWith(
+                  overflow: TextOverflow.ellipsis,
                   fontWeight: FontWeight.w400,
                   color: Colors.black,
                   fontSize: 10.sp)),

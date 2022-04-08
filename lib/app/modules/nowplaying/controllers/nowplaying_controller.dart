@@ -1,16 +1,14 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:audiotagger/audiotagger.dart';
-import 'package:audiotagger/models/tag.dart';
-import 'package:emusic/app/model/music_model.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:id3/id3.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
 
 class NowplayingController extends GetxController {
   //TODO: Implement NowplayingController
@@ -18,8 +16,6 @@ class NowplayingController extends GetxController {
   final count = 0.obs;
   var isPlaying = false.obs;
   var isOnRepeat = false.obs;
-  String url =
-      'https://firebasestorage.googleapis.com/v0/b/e-music-8e0b7.appspot.com/o/Music%2FAlbatross%2FMa%20ra%20malai%2Falbatross%20-%20Intro%20-%20Ma%20Ra%20Malai.mp3?alt=media&token=015f9729-6b56-4ae7-b21f-973ee492bf49';
 
   Rx<Duration> position = Duration().obs;
   Rx<Duration> duration = Duration().obs;
@@ -67,7 +63,7 @@ class NowplayingController extends GetxController {
     isPlaying.value = !isPlaying.value;
   }
 
-  play() async {
+  play(url) async {
     if (isPlaying == false) {
       int result = await audioPlayer.play(url);
       if (result == 1) {
@@ -105,16 +101,42 @@ class NowplayingController extends GetxController {
     }
   }
 
-  void smartPlay() async {
+  void smartPlay(url) async {
     if (playerState.value == PlayerState.PLAYING) {
       pause();
     } else {
-      play();
+      play(url);
     }
   }
 
   set setPositionValue(double value) =>
       audioPlayer.seek(Duration(seconds: value.toInt()));
+
+  Future<void> share(link, text) async {
+    var img = await getImage(link);
+    // print(img);
+    // await Share.share(text, subject: 'listen to this song');
+    await Share.shareFiles(
+      [img],
+      sharePositionOrigin:
+          Rect.fromCenter(center: Offset(2, 2), width: 100, height: 100),
+      text: text,
+    );
+  }
+
+  getImage(String link) async {
+    final urlImage = link;
+    final url = Uri.parse(urlImage);
+    final response = await http.get(url);
+    final bytes = response.bodyBytes;
+    if (kDebugMode) {
+      print(response.bodyBytes);
+    }
+    final temp = await getTemporaryDirectory();
+    final path = '${temp.path}/image.jpg';
+    File(path).writeAsBytesSync(bytes);
+    return path;
+  }
 
   @override
   void onClose() {}
