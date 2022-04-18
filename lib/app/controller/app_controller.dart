@@ -10,6 +10,8 @@ import 'package:path_provider/path_provider.dart';
 class AppController extends GetxController {
   final Rx<ReceivePort> _port = ReceivePort().obs;
 
+  var isSubscribed = false.obs;
+
   @override
   void onInit() {
     IsolateNameServer.registerPortWithName(
@@ -27,6 +29,10 @@ class AppController extends GetxController {
       } else if (status == DownloadTaskStatus.failed) {
         GetSnackBar(
           message: 'Download failed',
+        );
+      } else if (status == DownloadTaskStatus.enqueued) {
+        GetSnackBar(
+          message: 'Downloading.......',
         );
       }
     });

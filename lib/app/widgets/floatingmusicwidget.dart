@@ -18,9 +18,7 @@ class FloatingMusicWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
-        onPressed: () {
-          // Get.to(NowplayingView());
-        },
+        onPressed: () {},
         backgroundColor: Colors.transparent,
         hoverElevation: 0,
         elevation: 0,

@@ -1,3 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emusic/app/modules/merchstore/views/merch_detail_view.dart';
+import 'package:emusic/app/modules/payment/views/payment_view.dart';
+import 'package:emusic/app/widgets/carousel.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,47 +11,96 @@ import '../../../constants/constants.dart';
 import '../controllers/merchstore_controller.dart';
 
 class MerchstoreView extends GetView<MerchstoreController> {
+  Stream<QuerySnapshot> collectionStream =
+      FirebaseFirestore.instance.collection('merch').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainBackground,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildAppbar(),
-          buildMerchTop(),
-          SizedBox(
-            height: 15.sp,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              'New Arrivals',
-              style: titleStyle.copyWith(color: Colors.black, fontSize: 15.sp),
-            ),
-          ),
-          Container(
-            height: 180.sp,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int i) {
-                  return buildMerchCard();
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildAppbar(),
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('featured_merch')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.grey,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.primaryClr),
+                      ),
+                    );
+                  }
+                  if (snapshot.data == null) {
+                    return Center(child: Text('No Data'));
+                  }
+                  var result = snapshot.data?.docs.first;
+                  return Carousel(
+                      img: result!['merch_img'],
+                      title: result!['title'],
+                      price: result!['price']);
+                  //  buildMerchTop(
+                  //     result!['merch_img'], result!['title'], result!['price']);
                 }),
-          ),
-        ],
+            // SizedBox(
+            //   height: 15.sp,
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                'New Arrivals',
+                style:
+                    titleStyle.copyWith(color: Colors.black, fontSize: 15.sp),
+              ),
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: collectionStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(AppColors.primaryClr),
+                    ),
+                  );
+                }
+                if (snapshot.data == null) {
+                  return Center(child: Text('No Data'));
+                }
+                return Container(
+                  height: 180.sp,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data!.docs.first['merch'].length,
+                      itemBuilder: (BuildContext context, int i) {
+                        var doc = snapshot.data!.docs.first['merch'][i];
+                        return buildMerchCard(
+                            doc['merch_img'], doc['title'], doc['price']);
+                      }),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  buildMerchTop() {
+  buildMerchTop(img, title, price) {
     return Stack(
       alignment: Alignment.center,
       children: [
         Container(
           height: 300.h,
-          child: Image.asset(
-            AppImages.merch,
+          child: Image.network(
+            img,
             fit: BoxFit.contain,
           ),
         ),
@@ -75,27 +129,32 @@ class MerchstoreView extends GetView<MerchstoreController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Facelift T-shirt\nRs.1500',
+                '${title}\nRs.${price}',
                 style:
                     titleStyle.copyWith(fontSize: 16.sp, color: Colors.white),
               ),
-              Container(
-                height: 40.sp,
-                width: 100.sp,
-                decoration: BoxDecoration(
-                    color: AppColors.primaryClr,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 5,
-                          color: AppColors.shadow,
-                          offset: Offset(1, 4))
-                    ],
-                    borderRadius: BorderRadius.circular(40.r)),
-                child: Center(
-                  child: Text(
-                    'Buy Now',
-                    style: titleStyle.copyWith(
-                        fontSize: 12.sp, color: Colors.white),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => PaymentView());
+                },
+                child: Container(
+                  height: 40.sp,
+                  width: 100.sp,
+                  decoration: BoxDecoration(
+                      color: AppColors.primaryClr,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 5,
+                            color: AppColors.shadow,
+                            offset: Offset(1, 4))
+                      ],
+                      borderRadius: BorderRadius.circular(40.r)),
+                  child: Center(
+                    child: Text(
+                      'Buy Now',
+                      style: titleStyle.copyWith(
+                          fontSize: 12.sp, color: Colors.white),
+                    ),
                   ),
                 ),
               )
@@ -122,33 +181,42 @@ class MerchstoreView extends GetView<MerchstoreController> {
     );
   }
 
-  buildMerchCard() {
-    return Container(
-      height: 200.sp,
-      width: 150.sp,
-      margin: EdgeInsets.symmetric(horizontal: 10.sp),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-                blurRadius: 5, color: AppColors.shadow, offset: Offset(1, 4))
-          ]),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-              child: Container(
-                  height: 120.sp, child: Image.asset(AppImages.merch))),
-          Padding(
-            padding: EdgeInsets.only(left: 10.sp),
-            child: Text(
-              'FaceLift T-shirt\nRs. 1500',
-              overflow: TextOverflow.fade,
-              style: subtitleStyle.copyWith(color: Colors.black),
+  buildMerchCard(merch_img, title, price) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => MerchDetailView(
+              img: merch_img,
+              title: title,
+              price: price,
+            ));
+      },
+      child: Container(
+        height: 200.sp,
+        width: 150.sp,
+        margin: EdgeInsets.symmetric(horizontal: 10.sp),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 5, color: AppColors.shadow, offset: Offset(1, 4))
+            ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+                child:
+                    Container(height: 120.sp, child: Image.network(merch_img))),
+            Padding(
+              padding: EdgeInsets.only(left: 10.sp),
+              child: Text(
+                '${title}\nRs. ${price}',
+                overflow: TextOverflow.fade,
+                style: subtitleStyle.copyWith(color: Colors.black),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

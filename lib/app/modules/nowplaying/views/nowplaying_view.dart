@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emusic/app/controller/app_controller.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/customdrawer.dart';
+import 'package:emusic/app/widgets/dialog.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
 import 'package:emusic/app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -12,19 +13,19 @@ import '../../../constants/constants.dart';
 import '../controllers/nowplaying_controller.dart';
 
 class NowplayingView extends StatefulWidget {
-  final String artist;
-  final String album;
-  final String song;
-  final String album_art;
-  final String song_url;
+  final String? artist;
+  final String? album;
+  final String? song;
+  final String? album_art;
+  final String? song_url;
 
   NowplayingView(
       {Key? key,
-      required this.artist,
-      required this.album,
-      required this.song,
-      required this.album_art,
-      required this.song_url})
+      this.artist,
+      this.album,
+      this.song,
+      this.album_art,
+      this.song_url})
       : super(key: key);
 
   @override
@@ -121,7 +122,12 @@ class _NowplayingViewState extends State<NowplayingView> {
                 child: MaterialButton(
                   onPressed: () {
                     print('pressed');
-                    appcontroller.download(widget.song_url!);
+
+                    if (appcontroller.isSubscribed.value) {
+                      appcontroller.download(widget.song_url!);
+                    } else {
+                      dialog();
+                    }
                   },
                   color: AppColors.primaryClr,
                   height: 20.sp,

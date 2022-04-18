@@ -39,7 +39,10 @@ class HomeView extends GetView<HomeController> {
             Hero(
               tag: 'search',
               child: GestureDetector(
-                onTap: () => Get.toNamed(Routes.SEARCH),
+                onTap: () {
+                  showSearch(
+                      context: context, delegate: CustomSearchDelegate());
+                },
                 child: Container(
                     margin: EdgeInsets.all(20),
                     // padding: EdgeInsets.all(10),
@@ -126,30 +129,34 @@ class HomeView extends GetView<HomeController> {
               color: Colors.black,
             )),
       ),
-      title: Obx(
-        () => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              controller.morning.value
-                  ? 'Good Morning'
-                  : controller.afternoon.value
-                      ? 'Good Afternoon'
-                      : controller.evening.value
-                          ? 'Good Evening'
-                          : 'Good Night',
-              style: titleStyle.copyWith(color: Colors.black, fontSize: 20.sp),
-            ),
-            Text(
-              "Jyodesh",
-              style: subtitleStyle.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                  fontSize: 15.sp),
-            ),
-          ],
-        ),
+      title:
+          // Obx(
+          //   () =>
+          Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            controller.now.hour >= 3 && controller.now.hour < 12
+                ? 'Good Morning'
+                : controller.now.hour >= 12 && controller.now.hour < 17
+                    ? 'Good Afternoon'
+                    : controller.now.hour >= 17 && controller.now.hour < 20
+                        ? 'Good Evening'
+                        : controller.now.hour >= 20 && controller.now.hour < 3
+                            ? 'Good Night'
+                            : 'Good Evening',
+            style: titleStyle.copyWith(color: Colors.black, fontSize: 20.sp),
+          ),
+          Text(
+            "Jyodesh",
+            style: subtitleStyle.copyWith(
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+                fontSize: 15.sp),
+          ),
+        ],
       ),
+      // ),
       actions: [
         CircleAvatar(
           radius: 30,
@@ -296,5 +303,101 @@ class HomeView extends GetView<HomeController> {
         )
       ],
     );
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  List<String> searchTerms = [
+    'Ma ra malai',
+    'Cobweb',
+    'Albatross',
+    'Adhar',
+    'Jindabaad',
+    'Hatkela',
+    'Putali',
+  ];
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [
+      IconButton(
+          onPressed: () {
+            query = '';
+          },
+          icon: Icon(Icons.clear))
+    ];
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          close(context, null);
+        },
+        icon: Icon(Icons.arrow_back));
+    // TODO: implement buildLeading
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+
+    for (var fruit in searchTerms) {
+      if (fruit.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(fruit);
+      }
+    }
+
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+
+    for (var fruit in searchTerms) {
+      if (fruit.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(fruit);
+      }
+    }
+
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('music').snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        final results =
+            snapshot.data?.docs.where((a) => a[0]['artist'].contains(query));
+        // return ListView.builder(
+        //     itemBuilder: (context, index) => ListTile(
+        //           title: Text(results!.toList().toString()),
+        //         ));
+
+        return ListView.builder(
+          itemCount: matchQuery.length,
+          itemBuilder: (context, index) {
+            var result = matchQuery[index];
+            return ListTile(
+              onTap: () {
+                Get.back();
+              },
+              title: Text(result),
+            );
+          },
+        );
+      },
+    );
+    // TODO: implement buildSuggestions
+    throw UnimplementedError();
   }
 }

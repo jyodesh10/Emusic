@@ -16,6 +16,9 @@ class NowplayingController extends GetxController {
   final count = 0.obs;
   var isPlaying = false.obs;
   var isOnRepeat = false.obs;
+  var isNext = false.obs;
+
+  var data = ''.obs;
 
   Rx<Duration> position = Duration().obs;
   Rx<Duration> duration = Duration().obs;
@@ -79,6 +82,10 @@ class NowplayingController extends GetxController {
         // success
       }
     }
+  }
+
+  next() async {
+    if (isNext == true) {}
   }
 
   repeat() async {

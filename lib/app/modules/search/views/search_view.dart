@@ -47,15 +47,101 @@ class SearchView extends GetView<SearchController> {
               ], color: Colors.white, borderRadius: BorderRadius.circular(50)),
               child: Center(
                 child: TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                        focusColor: AppColors.primaryClr,
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'songs, albums or artists')),
+                  autofocus: true,
+                  decoration: InputDecoration(
+                      focusColor: AppColors.primaryClr,
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'songs, albums or artists'),
+                  onTap: () {
+                    showSearch(
+                        context: context, delegate: CustomSearchDelegate());
+                  },
+                ),
               ),
             )
           ],
         ));
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  List<String> searchTerms = [
+    'Ma ra malai',
+    'Cobweb',
+    'Albatross',
+    'Adhar',
+    'Jindabaad',
+    'Hatkela',
+    'Putali',
+  ];
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [
+      IconButton(
+          onPressed: () {
+            query = '';
+          },
+          icon: Icon(Icons.clear))
+    ];
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          close(context, null);
+        },
+        icon: Icon(Icons.arrow_back));
+    // TODO: implement buildLeading
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+
+    for (var fruit in searchTerms) {
+      if (fruit.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(fruit);
+      }
+    }
+
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+
+    for (var fruit in searchTerms) {
+      if (fruit.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(fruit);
+      }
+    }
+
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+    // TODO: implement buildSuggestions
+    throw UnimplementedError();
   }
 }

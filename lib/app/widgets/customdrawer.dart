@@ -1,4 +1,5 @@
 import 'package:emusic/app/constants/firebase_auth_constants.dart';
+import 'package:emusic/app/controller/app_controller.dart';
 import 'package:emusic/app/modules/login/controllers/login_controller.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ class CustomDrawer extends StatelessWidget {
   CustomDrawer({Key? key}) : super(key: key);
 
   final google = Google();
+
+  AppController appcontroller = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class CustomDrawer extends StatelessWidget {
                 )),
           ),
           Container(
-              height: MediaQuery.of(context).size.height - 200.sp,
+              height: MediaQuery.of(context).size.height - 100.sp,
               padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 20.sp),
               decoration: BoxDecoration(
                   color: AppColors.mainBackground,
@@ -77,18 +80,24 @@ class CustomDrawer extends StatelessWidget {
                           google.handleLogOut();
                           Get.offAllNamed(Routes.LOGIN);
                         }),
-                        buildDrawerItemTile('Not Subscribed', Icons.close, () {
+                        buildDrawerItemTile(
+                            appcontroller.isSubscribed.value
+                                ? 'Subscribed'
+                                : ' Not Subscibed',
+                            appcontroller.isSubscribed.value
+                                ? Icons.check
+                                : Icons.close, () {
                           Get.offAllNamed(Routes.SUBSCRIPTION);
                         }),
                       ],
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        'Designed by:\n Jyodesh',
-                        style: TextStyle(fontSize: 10.sp),
-                      ),
-                    )
+                    // Align(
+                    //   alignment: Alignment.bottomCenter,
+                    //   child: Text(
+                    //     'Designed by:\n Jyodesh',
+                    //     style: TextStyle(fontSize: 10.sp),
+                    //   ),
+                    // )
                   ],
                 ),
               )),
