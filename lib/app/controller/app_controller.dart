@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,13 @@ class AppController extends GetxController {
   final Rx<ReceivePort> _port = ReceivePort().obs;
 
   var isSubscribed = false.obs;
+  var trialMode = false.obs;
+
+  startTimer() {
+    Timer.run(() {
+      print(Timer(Duration(hours: 24), () {}));
+    });
+  }
 
   @override
   void onInit() {
@@ -55,8 +64,10 @@ class AppController extends GetxController {
     send?.send([id, status, progress]);
   }
 
-  void download(String url) async {
+  void download(String url, String song, String artist, String album,
+      String album_art) async {
     var status = await Permission.storage.status;
+    print(status);
     if (status.isGranted) {
       final basestorage = await getExternalStorageDirectory();
       final taskId = await FlutterDownloader.enqueue(
@@ -67,6 +78,26 @@ class AppController extends GetxController {
         openFileFromNotification:
             true, // click on notification to open downloaded file (for Android)
       );
+      FirebaseFirestore.instance.collection('downloads').add({
+        'song': song,
+        'artist': artist,
+        'album': album,
+        'album_art': album_art,
+        'url': url
+      });
+      Fluttertoast.showToast(msg: 'Download Started');
+    }
+  }
+
+  var permissionGranted = false.obs;
+
+  Future getStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      permissionGranted(true);
+    } else if (await Permission.storage.request().isPermanentlyDenied) {
+      await openAppSettings();
+    } else if (await Permission.storage.request().isDenied) {
+      permissionGranted(false);
     }
   }
 }

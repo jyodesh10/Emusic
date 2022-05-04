@@ -10,6 +10,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -149,14 +150,47 @@ class LoginView extends GetView<LoginController> {
                                   ),
                                 ),
                                 Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    'Forget Password?',
-                                    style: subtitleStyle.copyWith(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade300),
-                                  ),
-                                ),
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Obx(
+                                          () => Checkbox(
+                                              activeColor: AppColors.primaryClr,
+                                              side: BorderSide(
+                                                  width: 2,
+                                                  color: Colors.white60),
+                                              value: controller.isChecked.value,
+                                              onChanged: (value) {
+                                                controller.isChecked.value =
+                                                    !controller.isChecked.value;
+                                                if (controller
+                                                    .isChecked.value) {
+                                                  controller.data.write(
+                                                      'email',
+                                                      controller.emailController
+                                                          .text);
+                                                  controller.data.write(
+                                                      'password',
+                                                      controller
+                                                          .passwordController
+                                                          .text);
+                                                } else {
+                                                  controller.data
+                                                      .remove('email');
+                                                  controller.data
+                                                      .remove('password');
+                                                }
+                                              }),
+                                        ),
+                                        Text(
+                                          'Remember me',
+                                          style: subtitleStyle.copyWith(
+                                              fontSize: 12,
+                                              color: Colors.grey.shade300),
+                                        ),
+                                      ],
+                                    )),
                                 SizedBox(
                                   height: 40.sp,
                                 ),

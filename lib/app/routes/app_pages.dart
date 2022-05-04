@@ -1,3 +1,5 @@
+import 'package:emusic/app/modules/favourites/bindings/favourites_binding.dart';
+import 'package:emusic/app/modules/favourites/views/favourites_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/about/bindings/about_binding.dart';
@@ -6,6 +8,8 @@ import '../modules/adminpanel/bindings/adminpanel_binding.dart';
 import '../modules/adminpanel/views/adminpanel_view.dart';
 import '../modules/artist/bindings/artist_binding.dart';
 import '../modules/artist/views/artist_view.dart';
+import '../modules/downloads/bindings/downloads_binding.dart';
+import '../modules/downloads/views/downloads_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -16,6 +20,7 @@ import '../modules/nowplaying/bindings/nowplaying_binding.dart';
 import '../modules/nowplaying/views/nowplaying_view.dart';
 import '../modules/payment/bindings/payment_binding.dart';
 import '../modules/payment/views/payment_view.dart';
+
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/search/bindings/search_binding.dart';
@@ -92,6 +97,16 @@ class AppPages {
       name: _Paths.ADMINPANEL,
       page: () => AdminpanelView(),
       binding: AdminpanelBinding(),
+    ),
+    GetPage(
+      name: _Paths.DOWNLOADS,
+      page: () => DownloadsView(),
+      binding: DownloadsBinding(),
+    ),
+    GetPage(
+      name: _Paths.FAVOURITES,
+      page: () => FavouritesView(),
+      binding: FavouritesBinding(),
     ),
   ];
 }

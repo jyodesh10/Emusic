@@ -9,7 +9,8 @@ dialog() {
       title: "Not Subscribed Yet",
       middleText: "Subscribe",
       backgroundColor: Colors.white,
-      titleStyle: titleStyle.copyWith(color: Colors.black),
+      titleStyle: subtitleStyle.copyWith(
+          fontSize: 20, color: Colors.black87, fontWeight: FontWeight.normal),
       middleTextStyle: subtitleStyle.copyWith(color: Colors.black),
       content: Column(
         children: [

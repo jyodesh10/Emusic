@@ -1,10 +1,12 @@
 import 'package:emusic/app/constants/constants.dart';
 import 'package:emusic/app/controller/app_controller.dart';
 import 'package:emusic/app/modules/payment/views/payment_view.dart';
+import 'package:emusic/app/widgets/dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController
@@ -23,10 +25,11 @@ class HomeController extends GetxController {
   AppController appController = Get.put(AppController());
 
   @override
-  void onInit() {
+  void onInit() async {
+    await Permission.storage.status;
     print(now);
     notSubscribed();
-
+    date();
     super.onInit();
   }
 
@@ -35,40 +38,14 @@ class HomeController extends GetxController {
     super.onReady();
   }
 
+  date() {
+    DateTime now = DateTime.now();
+  }
+
   notSubscribed() async {
     await appController.isSubscribed.value;
     if (appController.isSubscribed.value == false) {
-      Get.defaultDialog(
-          title: "Not Subscribed Yet",
-          middleText: "Subscribe",
-          backgroundColor: Colors.white,
-          titleStyle: titleStyle.copyWith(color: Colors.black),
-          middleTextStyle: subtitleStyle.copyWith(color: Colors.black),
-          content: Column(
-            children: [
-              CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.red,
-                  child: Icon(Icons.close, size: 35, color: Colors.white)),
-              SizedBox(
-                height: 30,
-              ),
-              MaterialButton(
-                onPressed: () {
-                  Get.to(() => PaymentView());
-                },
-                color: AppColors.primaryClr,
-                height: 40,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40)),
-                child: Text(
-                  'Subscribe Now',
-                  style:
-                      subtitleStyle.copyWith(fontSize: 16, color: Colors.white),
-                ),
-              ),
-            ],
-          ));
+      dialog();
     }
   }
 

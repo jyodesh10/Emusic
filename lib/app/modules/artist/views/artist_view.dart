@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/controller/app_controller.dart';
 import 'package:emusic/app/modules/artist/views/album_view.dart';
+import 'package:emusic/app/modules/nowplaying/controllers/nowplaying_controller.dart';
 import 'package:emusic/app/modules/nowplaying/views/nowplaying_view.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,9 @@ class ArtistView extends GetView<ArtistController> {
 
   ArtistView(this.data);
 
+  AppController appController = Get.put(AppController());
+  NowplayingController nowController = Get.put(NowplayingController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,19 +30,25 @@ class ArtistView extends GetView<ArtistController> {
             buildArtistImg(),
             buildGradient(),
             Positioned(
-              top: 30,
+              top: 40,
               left: 15,
               // padding: EdgeInsets.only(top: 50, left: 20),
-              child: IconButton(
-                onPressed: () => Get.back(),
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 20,
+                child: IconButton(
+                  onPressed: () => Get.back(),
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    Icons.keyboard_arrow_left_rounded,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 180.sp),
+              padding: EdgeInsets.only(top: 170.sp),
               child: Center(
                 child: Column(
                   children: [
@@ -44,6 +56,13 @@ class ArtistView extends GetView<ArtistController> {
                       data!['artist'],
                       style: titleStyle.copyWith(
                           fontSize: 30.sp,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w800),
+                    ),
+                    Text(
+                      "Top Tracks",
+                      style: titleStyle.copyWith(
+                          fontSize: 12.sp,
                           color: Colors.black54,
                           fontWeight: FontWeight.w800),
                     ),
@@ -57,6 +76,19 @@ class ArtistView extends GetView<ArtistController> {
                           data!['album'][index]['album_name'],
                           data!['album'][index]['songs'][index]['url']);
                     }),
+                    ...List.generate(data!['album'].length > 1 ? 1 : 0,
+                        (index) {
+                      var result = data!['album'][1]['songs'][index];
+                      return buildMusicTile(
+                          result['song_name'],
+                          data!['artist'],
+                          data!['album'][1]['album_art'],
+                          data!['album'][1]['album_name'],
+                          data!['album'][1]['songs'][index]['url']);
+                    }),
+                    //   data!['album'].length>=2?
+                    //  List.generate(length, (index) => null)
+                    //  :Container(),
                     SizedBox(
                       height: 40,
                     ),
@@ -111,6 +143,36 @@ class ArtistView extends GetView<ArtistController> {
                         },
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, bottom: 20, right: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "About",
+                              style: titleStyle.copyWith(
+                                  fontSize: 15.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w800),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              data!['about'],
+                              style: subtitleStyle.copyWith(
+                                  fontSize: 10.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       height: 150,
                     )
@@ -149,7 +211,10 @@ class ArtistView extends GetView<ArtistController> {
             height: 54.sp,
             width: 54.sp,
             decoration: BoxDecoration(
-                image: DecorationImage(image: NetworkImage(album_img)),
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(album_img),
+                  //  NetworkImage(album_img)
+                ),
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(10.r)),
             // child: Image.network(bandimg!),
@@ -175,15 +240,26 @@ class ArtistView extends GetView<ArtistController> {
             ],
           ),
           Spacer(),
-          Text('3:30'),
           IconButton(
               onPressed: () {
+                appController.download(
+                    song_url, songname, artistname, album, album_img);
+              },
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.download)),
+          IconButton(
+              onPressed: () async {
+                await nowController.audioPlayer.pause();
+                await nowController.audioPlayer.stop();
+                nowController.play(song_url);
                 Get.to(NowplayingView(
                     artist: artistname,
                     album: album,
                     song: songname,
                     album_art: album_img,
                     song_url: song_url));
+
+                nowController.refresh();
               },
               icon: Icon(Icons.play_arrow)),
         ],
@@ -193,19 +269,26 @@ class ArtistView extends GetView<ArtistController> {
 
   buildArtistImg() {
     return Container(
-        margin: EdgeInsets.only(top: 30),
-        width: double.infinity,
-        height: 230.h,
-        child: Image.network(
-          data!['band_img'],
-          fit: BoxFit.fitHeight,
-        )
+      margin: EdgeInsets.only(top: 30),
+      width: double.infinity,
+      height: 230.h,
+      child: CachedNetworkImage(
+        imageUrl: data!['band_img'],
+        fit: BoxFit.cover,
+        progressIndicatorBuilder: (context, url, downloadProgress) =>
+            CircularProgressIndicator(value: downloadProgress.progress),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+      ),
+      // Image.network(
+      //   data!['band_img'],
+      //   fit: BoxFit.cover,
+      // )
 
-        // Image.asset(
-        //   'assets/images/cover.png',
-        //   fit: BoxFit.fitHeight,
-        // ),
-        );
+      // Image.asset(
+      //   'assets/images/cover.png',
+      //   fit: BoxFit.fitHeight,
+      // ),
+    );
   }
 
   buildGradient() {
@@ -216,11 +299,14 @@ class ArtistView extends GetView<ArtistController> {
       decoration: BoxDecoration(
           gradient: LinearGradient(
         colors: [
-          Color.fromRGBO(83, 64, 73, 0),
-          Color.fromRGBO(218, 218, 218, 0.42),
-          Color.fromRGBO(234, 234, 234, 0.72),
-          Color.fromRGBO(248, 248, 248, 1),
+          Colors.transparent,
+          Colors.white.withOpacity(0.0),
+          Colors.white.withOpacity(0.3),
+          Colors.white.withOpacity(0.5),
+          Colors.white.withOpacity(0.7),
+          Colors.white
         ],
+        stops: [0.0, 0.2, 0.5, 0.6, 0.8, 1],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       )),

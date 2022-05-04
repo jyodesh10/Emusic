@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:emusic/app/constants/firebase_auth_constants.dart';
 import 'package:emusic/app/controller/app_controller.dart';
+import 'package:emusic/app/modules/downloads/controllers/downloads_controller.dart';
+import 'package:emusic/app/modules/downloads/views/downloads_view.dart';
 import 'package:emusic/app/modules/login/controllers/login_controller.dart';
+import 'package:emusic/app/modules/register/controllers/register_controller.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,13 +13,18 @@ import 'package:get/get.dart';
 import '../constants/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../modules/nowplaying/controllers/nowplaying_controller.dart';
+
 class CustomDrawer extends StatelessWidget {
   CustomDrawer({Key? key}) : super(key: key);
 
   final google = Google();
+  var trialMode = false.obs;
 
   AppController appcontroller = Get.put(AppController());
-
+  RegisterController regcontroller = Get.put(RegisterController());
+  NowplayingController npcontroller = Get.put(NowplayingController());
+  DownloadsController dcontroller = Get.put(DownloadsController());
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -67,8 +77,12 @@ class CustomDrawer extends StatelessWidget {
                           Get.toNamed(Routes.HOME);
                         }),
                         buildDrawerItemTile(
-                            'Playlists', Icons.playlist_play, () {}),
-                        buildDrawerItemTile('Downloads', Icons.download, () {}),
+                            'Favourites', Icons.favorite_rounded, () {
+                          Get.toNamed(Routes.FAVOURITES);
+                        }),
+                        buildDrawerItemTile('Downloads', Icons.download, () {
+                          Get.to(() => DownloadsView());
+                        }),
                         buildDrawerItemTile('Merch Store', Icons.store, () {
                           Get.toNamed(Routes.MERCHSTORE);
                         }),
@@ -78,17 +92,52 @@ class CustomDrawer extends StatelessWidget {
                         buildDrawerItemTile('Log out', Icons.logout, () {
                           auth.signOut();
                           google.handleLogOut();
+                          npcontroller.audioPlayer.stop();
                           Get.offAllNamed(Routes.LOGIN);
+                          regcontroller.data.remove('username');
+                          dcontroller.deleteAll();
                         }),
-                        buildDrawerItemTile(
-                            appcontroller.isSubscribed.value
-                                ? 'Subscribed'
-                                : ' Not Subscibed',
-                            appcontroller.isSubscribed.value
-                                ? Icons.check
-                                : Icons.close, () {
-                          Get.offAllNamed(Routes.SUBSCRIPTION);
-                        }),
+                        Obx(
+                          () => buildDrawerItemTile(
+                              appcontroller.isSubscribed.value
+                                  ? 'Subscribed'
+                                  : ' Not Subscibed',
+                              appcontroller.isSubscribed.value
+                                  ? Icons.check
+                                  : Icons.close, () {
+                            Get.offAllNamed(Routes.SUBSCRIPTION);
+                          }),
+                        ),
+                        Obx(
+                          () => SwitchListTile(
+                              controlAffinity: ListTileControlAffinity.leading,
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(
+                                '1 Day Trial Mode',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text('24:00'),
+                              value: appcontroller.trialMode.value,
+                              onChanged: (val) {
+                                print(val);
+                                appcontroller.trialMode.value =
+                                    !appcontroller.trialMode.value;
+                                if (appcontroller.trialMode.value) {
+                                  appcontroller.isSubscribed.value = true;
+                                  Timer.periodic(Duration(hours: 24), (Timer) {
+                                    // print(Timer.tick);
+                                    appcontroller.isSubscribed.value = false;
+                                  });
+                                  Get.defaultDialog(
+                                      middleText: '24 hour Trial has started');
+                                } else {
+                                  appcontroller.isSubscribed.value = false;
+                                }
+                              }),
+                        )
                       ],
                     ),
                     // Align(

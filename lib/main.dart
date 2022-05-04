@@ -1,5 +1,6 @@
 import 'package:emusic/app/constants/auth_controller.dart';
 import 'package:emusic/app/constants/firebase_auth_constants.dart';
+import 'package:emusic/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Get.put(FavouritesController()).initStorage();
   await FlutterDownloader.initialize(
       debug: true // optional: set false to disable printing logs to console
       );

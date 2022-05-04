@@ -43,8 +43,8 @@ class MerchstoreView extends GetView<MerchstoreController> {
                   var result = snapshot.data?.docs.first;
                   return Carousel(
                       img: result!['merch_img'],
-                      title: result!['title'],
-                      price: result!['price']);
+                      title: result['title'],
+                      price: result['price']);
                   //  buildMerchTop(
                   //     result!['merch_img'], result!['title'], result!['price']);
                 }),

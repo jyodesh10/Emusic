@@ -1,13 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emusic/app/constants/constants.dart';
+import 'package:emusic/app/constants/firebase_auth_constants.dart';
 import 'package:emusic/app/modules/artist/views/album_view.dart';
 import 'package:emusic/app/modules/artist/views/artist_view.dart';
+import 'package:emusic/app/modules/register/controllers/register_controller.dart';
 import 'package:emusic/app/routes/app_pages.dart';
 import 'package:emusic/app/widgets/customdrawer.dart';
 import 'package:emusic/app/widgets/floatingmusicwidget.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -15,12 +20,14 @@ class HomeView extends GetView<HomeController> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   Stream<QuerySnapshot> collectionStream =
       FirebaseFirestore.instance.collection('music').snapshots();
-
+  Stream<QuerySnapshot> topAlbum =
+      FirebaseFirestore.instance.collection('album').snapshots();
   Future<DocumentSnapshot<Map<String, dynamic>>> documentStream =
       FirebaseFirestore.instance.collection('music').doc().get();
 
   @override
   HomeController controller = Get.put(HomeController());
+  RegisterController regcontroller = Get.put(RegisterController());
 
   @override
   Widget build(BuildContext context) {
@@ -96,12 +103,13 @@ class HomeView extends GetView<HomeController> {
               height: 25.sp,
             ),
             buildHomeTiles('Top Albums'),
-            buildAlbumsListview(),
+            buildTopAlbumsListview(),
 
             SizedBox(
               height: 25.sp,
             ),
             buildHomeTiles('Top Genres'),
+            buildTopGenres(),
             SizedBox(
               height: 100.sp,
             ),
@@ -118,6 +126,7 @@ class HomeView extends GetView<HomeController> {
       elevation: 0,
       backgroundColor: AppColors.mainBackground,
       automaticallyImplyLeading: false,
+      toolbarHeight: 60,
       leading: Builder(
         builder: (context) => IconButton(
             onPressed: () {
@@ -136,23 +145,33 @@ class HomeView extends GetView<HomeController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            controller.now.hour >= 3 && controller.now.hour < 12
+            controller.now.hour >= 4 && controller.now.hour <= 12
                 ? 'Good Morning'
-                : controller.now.hour >= 12 && controller.now.hour < 17
+                : controller.now.hour >= 13 && controller.now.hour <= 17
                     ? 'Good Afternoon'
-                    : controller.now.hour >= 17 && controller.now.hour < 20
+                    : controller.now.hour >= 18 && controller.now.hour <= 20
                         ? 'Good Evening'
-                        : controller.now.hour >= 20 && controller.now.hour < 3
+                        : controller.now.hour >= 21 && controller.now.hour <= 3
                             ? 'Good Night'
-                            : 'Good Evening',
+                            : 'Hello',
             style: titleStyle.copyWith(color: Colors.black, fontSize: 20.sp),
           ),
           Text(
-            "Jyodesh",
+            // ignore: prefer_if_null_operators
+            // auth.currentUser!.displayName.toString().isNotEmpty
+
+            //     ? auth.currentUser!.displayName.toString()
+            // ignore: prefer_if_null_operators
+            // : regcontroller.data.read('username') != null
+            //     ? regcontroller.data.read('username')
+            // :
+            auth.currentUser!.email.toString().split("@").first,
+            // : auth.currentUser!.displayName.toString(),
             style: subtitleStyle.copyWith(
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
                 fontSize: 15.sp),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -161,11 +180,18 @@ class HomeView extends GetView<HomeController> {
         CircleAvatar(
           radius: 30,
           backgroundColor: Colors.transparent,
-          child: Image.asset(
-            AppImages.developer,
-            height: 100,
-            fit: BoxFit.contain,
+          backgroundImage: CachedNetworkImageProvider(
+            auth.currentUser!.photoURL == null
+                ? 'https://firebasestorage.googleapis.com/v0/b/e-music-8e0b7.appspot.com/o/appFiles%2Fpath2203.png?alt=media&token=a55ed317-df45-404f-bf8a-9d4ce81ec59f'
+                : auth.currentUser!.photoURL.toString(),
           ),
+          // child: Image.network(auth.currentUser!.photoURL.toString())
+
+          // Image.asset(
+          //   AppImages.developer,
+          //   height: 100,
+          //   fit: BoxFit.contain,
+          // ),
         ),
         SizedBox(
           width: 20.sp,
@@ -188,11 +214,11 @@ class HomeView extends GetView<HomeController> {
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
                       fontSize: 16.sp)),
-              Text('See All',
-                  style: subtitleStyle.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                      fontSize: 10.sp)),
+              // Text('See All',
+              //     style: subtitleStyle.copyWith(
+              //         fontWeight: FontWeight.w700,
+              //         color: Colors.black,
+              //         fontSize: 10.sp)),
             ],
           ),
         ),
@@ -265,7 +291,47 @@ class HomeView extends GetView<HomeController> {
             itemBuilder: (BuildContext context, int index) {
               var result = snapshot.data?.docs.first;
               return buildImageTextCard(result!['album'][index]['album_name'],
-                  result!['album'][index]['album_art'], () {
+                  result['album'][index]['album_art'], () {
+                Get.to(AlbumView(
+                  data: result,
+                  albumindex: index,
+                ));
+              });
+
+              // result!['artist'], result!['band_img'], 'album');
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  buildTopAlbumsListview() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: collectionStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.grey,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryClr),
+            ),
+          );
+        }
+        if (snapshot.data == null) {
+          return Center(child: Text('No Data'));
+        }
+
+        return Container(
+          height: 130.sp,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data!.docs[4]['album'].length,
+            itemExtent: 110.0,
+            itemBuilder: (BuildContext context, int index) {
+              var result = snapshot.data?.docs[4];
+              return buildImageTextCard(result!['album'][index]['album_name'],
+                  result['album'][index]['album_art'], () {
                 Get.to(AlbumView(
                   data: result,
                   albumindex: index,
@@ -286,9 +352,9 @@ class HomeView extends GetView<HomeController> {
         GestureDetector(
           onTap: ontap,
           child: CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage(bandimg),
-          ),
+              radius: 50, backgroundImage: CachedNetworkImageProvider(bandimg)
+              // NetworkImage(bandimg),
+              ),
         ),
         SizedBox(
           height: 10.sp,
@@ -304,6 +370,57 @@ class HomeView extends GetView<HomeController> {
       ],
     );
   }
+
+  buildTopGenres() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            buildGenreCard(Colors.red, 'Alternative'),
+            SizedBox(
+              height: 20,
+            ),
+            buildGenreCard(Colors.grey.shade700, 'Rock'),
+          ],
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Column(
+          children: [
+            buildGenreCard(Colors.purple, 'Metal'),
+            SizedBox(
+              height: 20,
+            ),
+            buildGenreCard(Colors.blue, 'Prog Rock'),
+          ],
+        )
+      ],
+    );
+  }
+
+  buildGenreCard(Color color, String genre) {
+    return Container(
+      height: 90,
+      width: 160,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(24, 59, 58, 58),
+                blurRadius: 10,
+                offset: Offset(2, 2))
+          ],
+          color: color),
+      child: Center(
+        child: Text(
+          genre,
+          style: titleStyle,
+        ),
+      ),
+    );
+  }
 }
 
 class CustomSearchDelegate extends SearchDelegate {
@@ -315,6 +432,8 @@ class CustomSearchDelegate extends SearchDelegate {
     'Jindabaad',
     'Hatkela',
     'Putali',
+    'Underside',
+    'Alice in Chains',
   ];
   @override
   List<Widget>? buildActions(BuildContext context) {

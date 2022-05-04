@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:emusic/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
@@ -9,8 +10,11 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
+import 'package:get_storage/get_storage.dart';
 
-class NowplayingController extends GetxController {
+// ignore: deprecated_member_use
+class NowplayingController extends GetxController
+    with SingleGetTickerProviderMixin {
   //TODO: Implement NowplayingController
 
   final count = 0.obs;
@@ -18,8 +22,8 @@ class NowplayingController extends GetxController {
   var isOnRepeat = false.obs;
   var isNext = false.obs;
 
-  var data = ''.obs;
-
+  var data = GetStorage();
+  late AnimationController acontroller;
   Rx<Duration> position = Duration().obs;
   Rx<Duration> duration = Duration().obs;
   final Rx<PlayerState> playerState = PlayerState.STOPPED.obs;
@@ -27,6 +31,7 @@ class NowplayingController extends GetxController {
   AudioPlayer audioPlayer = AudioPlayer();
   @override
   void onInit() {
+    HomeController().notSubscribed();
     audioPlayer.onDurationChanged.listen((Duration d) {
       print('Max duration: $d');
       duration.value = d;
@@ -69,6 +74,7 @@ class NowplayingController extends GetxController {
   play(url) async {
     if (isPlaying == false) {
       int result = await audioPlayer.play(url);
+      isPlaying(true);
       if (result == 1) {
         // success
       }
@@ -78,6 +84,17 @@ class NowplayingController extends GetxController {
   pause() async {
     if (isPlaying == true) {
       int result = await audioPlayer.pause();
+      isPlaying(false);
+      if (result == 1) {
+        // success
+      }
+    }
+  }
+
+  resume() async {
+    if (isPlaying == false) {
+      int result = await audioPlayer.resume();
+      isPlaying(true);
       if (result == 1) {
         // success
       }
@@ -85,7 +102,9 @@ class NowplayingController extends GetxController {
   }
 
   next() async {
-    if (isNext == true) {}
+    if (isNext == true) {
+      int result = await audioPlayer.stop();
+    }
   }
 
   repeat() async {

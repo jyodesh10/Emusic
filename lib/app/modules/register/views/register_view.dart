@@ -16,6 +16,8 @@ class RegisterView extends GetView<RegisterController> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  RegisterController controller = Get.put(RegisterController());
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.mainBackground,
@@ -48,15 +50,17 @@ class RegisterView extends GetView<RegisterController> {
                     ),
                     Obx(
                       () => CustomButton(
-                        title: controller.loading.value
-                            ? 'Processing'
-                            : 'Register',
+                        title:
+                            controller.loading.value ? 'Register' : 'Register',
                         ontap: () {
                           controller.loading(true);
                           if (_formKey.currentState!.validate()) {
                             authController.register(
                                 controller.email.text.trim(),
                                 controller.password.text.trim());
+                            controller.loading(false);
+                            controller.data
+                                .write('username', controller.username.text);
                           } else {
                             Get.snackbar('Error', 'Registration');
                           }

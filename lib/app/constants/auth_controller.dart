@@ -26,27 +26,13 @@ class AuthController extends GetxController {
 
     firebaseUser = Rx<User?>(auth.currentUser);
     firebaseUser.bindStream(auth.userChanges());
-
-    // ever(firebaseUser, _setInitialScreen);
   }
-
-  // _setInitialScreen(User? user) {
-  //   if (user != null) {
-  //     // if the user is not found then the user is navigated to the Register Screen
-  //     Get.toNamed(Routes.HOME);
-
-  //     // Get.offAll(() => HomeView());
-  //   } else {
-  //     // if the user exists and logged in the the user is navigated to the Home Screen
-  //     // Get.snackbar("Succefully", "Registered");
-  //     Get.offAll(() => LoginView());
-  //   }
-  // }
 
   void register(String email, password) async {
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      Get.to(() => LoginView());
     } on FirebaseAuthException catch (e) {
       buildSnackbar("Error Login", e.message.toString(), Colors.white,
           Color.fromARGB(188, 219, 5, 5));

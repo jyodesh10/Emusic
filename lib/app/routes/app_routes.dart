@@ -15,6 +15,8 @@ abstract class Routes {
   static const NOWPLAYING = _Paths.NOWPLAYING;
   static const SEARCH = _Paths.SEARCH;
   static const ADMINPANEL = _Paths.ADMINPANEL;
+  static const DOWNLOADS = _Paths.DOWNLOADS;
+  static const FAVOURITES = _Paths.FAVOURITES;
 }
 
 abstract class _Paths {
@@ -31,4 +33,6 @@ abstract class _Paths {
   static const NOWPLAYING = '/nowplaying';
   static const SEARCH = '/search';
   static const ADMINPANEL = '/adminpanel';
+  static const DOWNLOADS = '/downloads';
+  static const FAVOURITES = '/favourites';
 }

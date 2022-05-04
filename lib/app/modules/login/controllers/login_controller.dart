@@ -3,26 +3,35 @@ import 'package:emusic/app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginController extends GetxController {
   //TODO: Implement LoginController
-
+  var data = GetStorage();
+  var isChecked = false.obs;
   final count = 0.obs;
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
   @override
   void onInit() {
-    emailController.text = 'admin@gmail.com';
-    passwordController.text = 'admin123';
+    // emailController.text = 'admin@gmail.com';
+    // passwordController.text = 'admin123';
+    rememberMe();
     super.onInit();
   }
 
   @override
   void onReady() {
     super.onReady();
+  }
+
+  Future rememberMe() async {
+    emailController.text = await data.read('email') ?? '';
+    passwordController.text = await data.read('password') ?? "";
+    return;
   }
 
   @override
@@ -59,29 +68,6 @@ class Google {
       print(e.toString());
     }
   }
-
-  // Future<UserCredential?> handleLogIn() async {
-  //   final _googleSignIn = GoogleSignIn();
-  //   await _googleSignIn.disconnect().catchError((e, stack) {
-  //     print(e);
-  //   });
-
-  //   final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-  //   // handling the exception when cancel sign in
-  //   if (googleUser == null) return null;
-
-  //   // Obtain the auth details from the request
-  //   final GoogleSignInAuthentication? googleAuth =
-  //       await googleUser.authentication;
-
-  //   // Create a new credential
-  //   final credential = GoogleAuthProvider.credential(
-  //     accessToken: googleAuth?.accessToken,
-  //     idToken: googleAuth?.idToken,
-  //   );
-  //   return await FirebaseAuth.instance.signInWithCredential(credential);
-  // }
 
   Future handleLogOut() async {
     try {

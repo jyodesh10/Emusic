@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emusic/app/modules/nowplaying/views/nowplaying_view.dart';
+import 'package:emusic/app/widgets/floatingmusicwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../nowplaying/controllers/nowplaying_controller.dart';
+
 class AlbumView extends StatelessWidget {
-  const AlbumView({Key? key, this.data, this.albumindex}) : super(key: key);
+  AlbumView({Key? key, this.data, this.albumindex}) : super(key: key);
   final QueryDocumentSnapshot<Object?>? data;
   final int? albumindex;
+  NowplayingController nowController = Get.put(NowplayingController());
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +64,9 @@ class AlbumView extends StatelessWidget {
                               song: data!['album'][albumindex]['songs'][index]
                                   ['song_name'],
                             ));
+                        nowController.audioPlayer.stop().then((value) =>
+                            nowController
+                                .play(data!['album'][albumindex]['songs']));
                       },
                       icon: Icon(
                         Icons.play_arrow,
@@ -76,6 +83,8 @@ class AlbumView extends StatelessWidget {
               itemCount: data!['album'][albumindex]['songs'].length),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingMusicWidget(),
     );
   }
 }
