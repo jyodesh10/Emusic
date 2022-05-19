@@ -121,22 +121,28 @@ class CustomDrawer extends StatelessWidget {
                               ),
                               subtitle: Text('24:00'),
                               value: appcontroller.trialMode.value,
-                              onChanged: (val) {
-                                print(val);
-                                appcontroller.trialMode.value =
-                                    !appcontroller.trialMode.value;
-                                if (appcontroller.trialMode.value) {
-                                  appcontroller.isSubscribed.value = true;
-                                  Timer.periodic(Duration(hours: 24), (Timer) {
-                                    // print(Timer.tick);
-                                    appcontroller.isSubscribed.value = false;
-                                  });
-                                  Get.defaultDialog(
-                                      middleText: '24 hour Trial has started');
-                                } else {
-                                  appcontroller.isSubscribed.value = false;
-                                }
-                              }),
+                              onChanged: appcontroller.trialMode.value
+                                  ? null
+                                  : (val) {
+                                      print(val);
+                                      appcontroller.trialMode.value =
+                                          !appcontroller.trialMode.value;
+                                      if (appcontroller.trialMode.value) {
+                                        appcontroller.isSubscribed.value = true;
+                                        Timer.periodic(Duration(hours: 24),
+                                            (Timer) {
+                                          // print(Timer.tick);
+                                          appcontroller.isSubscribed.value =
+                                              false;
+                                        });
+                                        Get.defaultDialog(
+                                            middleText:
+                                                '24 hour Trial has started');
+                                      } else {
+                                        appcontroller.isSubscribed.value =
+                                            false;
+                                      }
+                                    }),
                         )
                       ],
                     ),

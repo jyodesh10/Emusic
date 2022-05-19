@@ -16,6 +16,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../controllers/home_controller.dart';
 
+// Main home page
 class HomeView extends GetView<HomeController> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   Stream<QuerySnapshot> collectionStream =

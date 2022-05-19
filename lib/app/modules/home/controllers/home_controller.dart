@@ -42,6 +42,8 @@ class HomeController extends GetxController {
     DateTime now = DateTime.now();
   }
 
+  // checks if subscribed or not
+
   notSubscribed() async {
     await appController.isSubscribed.value;
     if (appController.isSubscribed.value == false) {

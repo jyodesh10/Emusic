@@ -20,6 +20,7 @@ class FavouritesController extends GetxController {
   Rx<Favourites> favourites = Favourites().obs;
 
   RxList<Rx<Favourite>> a = RxList<Rx<Favourite>>();
+  // adds song to favorite
 
   addFavourite() async {
     if (this.song.value == '' || this.artist.value == '') {
@@ -45,6 +46,7 @@ class FavouritesController extends GetxController {
     }
   }
 
+  // delete song from favorite
   Future<void> deleteAll() async {
     final collection =
         await FirebaseFirestore.instance.collection("favourites").get();

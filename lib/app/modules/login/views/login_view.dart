@@ -16,6 +16,8 @@ import '../controllers/login_controller.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Login view
+
 class LoginView extends GetView<LoginController> {
   final _formKey = GlobalKey<FormState>();
   @override

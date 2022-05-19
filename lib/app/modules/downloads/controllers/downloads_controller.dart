@@ -16,6 +16,7 @@ class DownloadsController extends GetxController {
     super.onReady();
   }
 
+  // delete from donwloads
   Future<void> deleteAll() async {
     final collection =
         await FirebaseFirestore.instance.collection("downloads").get();

@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../../../constants/constants.dart';
 import '../../../model/favourites_model.dart';
 import '../controllers/favourites_controller.dart';
+// Favourite view
 
 class FavouritesView extends GetView<FavouritesController> {
   var data = Favourite();

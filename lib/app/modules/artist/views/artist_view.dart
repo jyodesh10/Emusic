@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controllers/artist_controller.dart';
-
+// Artist view
 class ArtistView extends GetView<ArtistController> {
   final QueryDocumentSnapshot<Object?>? data;
 

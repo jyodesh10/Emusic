@@ -13,18 +13,19 @@ class MyInputField extends StatelessWidget {
   final bool? containsPadding;
   final Icon? icon;
   final FormFieldValidator? validator;
-  const MyInputField(
-      {Key? key,
-      required this.title,
-      this.hint,
-      this.controller,
-      this.widget,
-      this.ismultiline = false,
-      this.customtitle = false,
-      this.containsPadding = true,
-      this.icon,
-      this.validator})
-      : super(key: key);
+
+  const MyInputField({
+    Key? key,
+    required this.title,
+    this.hint,
+    this.controller,
+    this.widget,
+    this.ismultiline = false,
+    this.customtitle = false,
+    this.containsPadding = true,
+    this.icon,
+    this.validator,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -101,77 +102,69 @@ class InputField extends StatelessWidget {
   final bool obscureText;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      // height: getProportionateScreenHeight(60),
-      padding: EdgeInsets.symmetric(
-        horizontal: 20,
-        // vertical: getProportionateScreenHeight(10),
-      ),
-      child: obscureText
-          ? TextFormField(
-              obscureText: obscureText,
-              readOnly: isReadonly,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              focusNode: FocusNode(),
-              controller: controller,
-              validator: validator,
-              decoration: InputDecoration(
-                  labelText: label,
-                  labelStyle: const TextStyle(
-                      fontWeight: FontWeight.w400, fontSize: 16),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                        color: Color.fromRGBO(164, 164, 164, .5)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                        color: Color.fromRGBO(164, 164, 164, 1)),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  prefixIcon: widget ??
-                      Icon(
-                        icon,
-                      ),
-                  hintText: hintText,
-                  hintStyle: const TextStyle(color: Colors.grey)),
-            )
-          : TextFormField(
-              obscureText: obscureText,
-              readOnly: isReadonly,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              focusNode: FocusNode(),
-              controller: controller,
-              validator: validator,
-              maxLines: isMultiline ? 4 : null,
-              decoration: InputDecoration(
-                  labelText: label,
-                  labelStyle: const TextStyle(
-                      fontWeight: FontWeight.w400, fontSize: 16),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                        color: Color.fromRGBO(164, 164, 164, .5)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                        color: Color.fromRGBO(164, 164, 164, 1)),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  prefixIcon: widget ??
-                      Icon(
-                        icon,
-                      ),
-                  hintText: hintText,
-                  hintStyle: const TextStyle(color: Colors.grey)),
-            ),
-    );
+    return obscureText
+        ? TextFormField(
+            obscureText: obscureText,
+            readOnly: isReadonly,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            focusNode: FocusNode(),
+            controller: controller,
+            validator: validator,
+            decoration: InputDecoration(
+                labelText: label,
+                labelStyle:
+                    const TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                      color: Color.fromRGBO(164, 164, 164, .5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide:
+                      const BorderSide(color: Color.fromRGBO(164, 164, 164, 1)),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                prefixIcon: widget ??
+                    Icon(
+                      icon,
+                    ),
+                hintText: hintText,
+                hintStyle: const TextStyle(color: Colors.grey)),
+          )
+        : TextFormField(
+            obscureText: obscureText,
+            readOnly: isReadonly,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            focusNode: FocusNode(),
+            controller: controller,
+            validator: validator,
+            maxLines: isMultiline ? 4 : null,
+            decoration: InputDecoration(
+                labelText: label,
+                labelStyle:
+                    const TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                      color: Color.fromRGBO(164, 164, 164, .5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide:
+                      const BorderSide(color: Color.fromRGBO(164, 164, 164, 1)),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                prefixIcon: widget ??
+                    Icon(
+                      icon,
+                    ),
+                hintText: hintText,
+                hintStyle: const TextStyle(color: Colors.grey)),
+          );
   }
 }

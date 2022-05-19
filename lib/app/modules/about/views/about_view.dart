@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controllers/about_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// About view
+
 class AboutView extends GetView<AboutController> {
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,9 @@ class AboutView extends GetView<AboutController> {
                 ),
               ),
               MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.launchurl('https://github.com/jyodesh10/Emusic');
+                  },
                   color: Colors.grey.shade200,
                   highlightColor: Colors.amber,
                   child: Text(
@@ -113,7 +117,9 @@ class AboutView extends GetView<AboutController> {
             backgroundColor: AppColors.primaryClr,
             child: IconButton(
               padding: EdgeInsets.zero,
-              onPressed: () {},
+              onPressed: () {
+                controller.launchurl('https://github.com/jyodesh10');
+              },
               icon: FaIcon(FontAwesomeIcons.github, color: Colors.white),
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutController extends GetxController {
   //TODO: Implement AboutController
@@ -12,6 +13,14 @@ class AboutController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+  }
+// launch any url 
+  launchurl(url) async {
+    if (await launch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override

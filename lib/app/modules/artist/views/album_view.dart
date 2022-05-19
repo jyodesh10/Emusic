@@ -8,7 +8,7 @@ import '../../../constants/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../nowplaying/controllers/nowplaying_controller.dart';
-
+// album view
 class AlbumView extends StatelessWidget {
   AlbumView({Key? key, this.data, this.albumindex}) : super(key: key);
   final QueryDocumentSnapshot<Object?>? data;

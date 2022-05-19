@@ -39,6 +39,8 @@ class LoginController extends GetxController {
   void increment() => count.value++;
 }
 
+// google login controller
+
 class Google {
   final googleSignIn = GoogleSignIn();
 
@@ -68,6 +70,8 @@ class Google {
       print(e.toString());
     }
   }
+
+  // handles loggin out for google
 
   Future handleLogOut() async {
     try {
