@@ -1,6 +1,15 @@
 # Emusic
 
+Music Streaming Application Using flutter
+
 ![My Image](screenshots/main.png)
+
+## Features
+
++ Browse and play music.
++ Search for specific songs.
++ Control playback (play, pause, skip, rewind).
++ View song information (title, artist, album, etc.).
 
 ## Screenshots
 <div align='center'>
