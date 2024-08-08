@@ -1,5 +1,7 @@
 # Emusic
 
+<img src='/assets/images/logo.png' width=15% />
+
 Music Streaming Application Using flutter
 
 ![My Image](screenshots/main.png)
